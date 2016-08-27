@@ -2,7 +2,7 @@
 import wave
 import pyaudio
 
-#終了ができていない
+#起動しないで，終了しない
 
 # 音をだす
 def play(wav, time):
