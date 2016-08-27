@@ -2,8 +2,6 @@
 import wave
 import pyaudio
 
-#終了ができていない
-
 # 音をだす
 def play(wav, mTime):
     
@@ -27,16 +25,14 @@ def play(wav, mTime):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
+    
     play("bird05", 100)
     play("chime08", 100)
     play("chime14", 100)
     play("dog01", 100)
     play("system46", 100)
     play("tiger01", 100)
-=======
-    play("inu", 100)
->>>>>>> 2c9903cecbf529ef067449e94c6e39beed963043
+    
     
     
     
