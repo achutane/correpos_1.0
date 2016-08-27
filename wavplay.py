@@ -26,7 +26,7 @@ def play(wav, time):
 
 
 if __name__ == '__main__':
-    play("test", 100)
+    play("inu", 100)
     
     
     
