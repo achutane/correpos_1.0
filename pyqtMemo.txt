@@ -1,0 +1,35 @@
+PyQt5メモ
+
+
+# --- 一般 --------------------------------
+ひな形
+#!/usr/bin/python3
+# -*- coding: shift-jis -*-
+
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+def main():
+	app = QApplication(sys.argv)
+
+	# ここに処理
+	
+	sys.exit(app.exec_())
+
+if __name__ == '__main__':
+	main()
+# ---------------------------------------
+
+
+# --- ボタン関連 -----------------------------
+
+ボタンのラベルを変更
+	button.setText("sample")
+
+ボタンクリック時の動作を変更
+	button.clicked.connect( func )
+	
+	def func(self)
+		print("test")
+	
