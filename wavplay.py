@@ -2,12 +2,13 @@
 import wave
 import pyaudio
 
-#起動しないで，終了しない
+#終了ができていない
 
 # 音をだす
-def play(wav, time):
+def play(wav, mTime):
     
-    wf = wave.open(wav+".wav", "r")
+    wavfile="./wav_SE/"+wav+".wav"
+    wf = wave.open(wavfile, "r")
     # ストリーム開始
     p = pyaudio.PyAudio()
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
@@ -17,7 +18,7 @@ def play(wav, time):
 
     data = wf.readframes(1024)
     t=0;
-    while(t<time):
+    while(t<mTime):
         stream.write(data)
         data = wf.readframes(1024)
         t=t+1
@@ -26,7 +27,13 @@ def play(wav, time):
 
 
 if __name__ == '__main__':
-    play("test", 100)
+    play("bird05", 100)
+    play("chime08", 100)
+    play("chime14", 100)
+    play("dog01", 100)
+    play("system46", 100)
+    play("tiger01", 100)
+    
     
     
     
