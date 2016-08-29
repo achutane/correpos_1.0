@@ -14,15 +14,14 @@ VERSION = "0.0.1"
 
 WINDOW_SIZE = (1200, 600)
 
-BUTTON_CAP_POS = (300, 450)
-
+BUTTON_SIZE = (100, 23)	# フォント23
+BUTTON_CAP_POS = (250, 489)
 BUTTON_NEXT_POS = (600 + BUTTON_CAP_POS[0], BUTTON_CAP_POS[1] )
 
-IMG1_POS = (100, 100)
-
+IMG_SIZE = (400, 300)
+IMG1_POS = (100, 150)
 IMG2_POS = (600 + IMG1_POS[0], IMG1_POS[1])
 
-IMG_SIZE = (400, 300)
 
 TXT_CAP = "撮影"
 TXT_RECAP = "再撮影"
@@ -45,13 +44,13 @@ class myWindow(QWidget):
 		# 撮影ボタン
 		self.capButton = QPushButton(TXT_CAP, self)					# 生成、キャプション
 		self.capButton.clicked.connect(self.on_clicked_cap)			# クリック時の動作
-		self.capButton.resize(self.capButton.sizeHint() )			# サイズ設定
+		self.capButton.resize(BUTTON_SIZE[0], BUTTON_SIZE[1] )		# サイズ設定
 		self.capButton.move(BUTTON_CAP_POS[0], BUTTON_CAP_POS[1])	# 位置
 		
 		# Nextボタン
 		self.nextButton = QPushButton(TXT_NEXT, self)					# 生成
 		self.nextButton.clicked.connect(self.on_clicked_next)			# クリック時
-		self.nextButton.resize(self.nextButton.sizeHint() )				# サイズ
+		self.nextButton.resize(BUTTON_SIZE[0], BUTTON_SIZE[1] )				# サイズ
 		self.nextButton.move(BUTTON_NEXT_POS[0], BUTTON_NEXT_POS[1])	# 配置
 		self.nextButton.setEnabled(False)								# 無効化
 
@@ -86,13 +85,13 @@ class myWindow(QWidget):
 	# Nextボタンの動作
 	def on_clicked_next(self):
 		# 処理
-		print("hello")
-		print(self.nextButton.size)
+		print("next")
 
 	# 再描画イベント
 	def paintEvent(self, event):
 		ret, frame1 = self.cvCap.read()	# キャプチャ
 		frame2 = cv2.resize(frame1, IMG_SIZE )	# リサイズ
+		frame2 = frame2[:,::-1]
 		
 		self.frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)	# 色変換 BGR -> RGB
 		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)	# QImage生成
