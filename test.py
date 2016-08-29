@@ -12,14 +12,14 @@ cascade = cv2.CascadeClassifier(cascade_path)
 
 
 #画像、映像の縦横サイズ
-S_X = 600
-S_Y = 500
+S_X = 400
+S_Y = 300
 
 #画像、映像のポジション
-B1_X = 900
+B1_X = 750
 B2_X = 100
-B1_Y = 100
-B2_Y = 100
+B1_Y = 150
+B2_Y = 150
 
 class Sub(QWidget):
 	
@@ -66,9 +66,9 @@ class Main(QWidget):
 		self.button1 = QPushButton('shot', self)
 		self.button2 = QPushButton('decide', self)
 		self.button1.resize(200, 50)
-		self.button1.move(250, 650)
+		self.button1.move(200, 500)
 		self.button2.resize(200, 50)
-		self.button2.move(1100, 650),
+		self.button2.move(850, 500),
 		
 		
 		self.button1.clicked.connect(self.buttonClicked)
@@ -76,7 +76,7 @@ class Main(QWidget):
 		self.button2.clicked.connect(QCoreApplication.instance().quit)
 		#self.button2.clicked.connect(self.buttonnext)
 	
-		self.setGeometry(200, 300, 1600, 800)
+		self.setGeometry(200, 300, 1200, 600)
 		self.setWindowTitle('init')	
 		#self.show()
 
@@ -108,7 +108,7 @@ class Main(QWidget):
 			#検出した顔を囲む矩形の作成
 			cv2.rectangle(frame1, tuple(rect[0:2]),tuple(rect[0:2] + rect[2:4]), color, thickness=2)
 
-		print(self.y)
+		
 		
 		
 		
@@ -131,6 +131,7 @@ class Main(QWidget):
 		self.label1.resize(S_X,S_Y)
 		self.label1.setPixmap(pix)
 		self.button1.setText("reshot")
+		print(self.y)
 		
 
 
