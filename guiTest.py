@@ -4,12 +4,21 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+import cv2
 
 APPNAME = "CORREPOS"
 VERSION = "0.0.1"
 
 WINDOW_W = 1200
 WINDOW_H = 600
+
+BUTTON_CAP_X = 100
+BUTTON_CAP_Y = 500
+
+BUTTON_NEXT_X = 600
+BUTTON_NEXT_Y = 500
 
 TXT_CAP = "撮影"
 TXT_RECAP = "再撮影"
@@ -26,20 +35,30 @@ class myWindow(QWidget):
 		# ウィンドウ設定
 		self.setWindowTitle(APPNAME)			# キャプション
 #		self.move(300,100)						# 位置
-		self.setFixedSize(WINDOW_W, WINDOW_H)	# サイズ
+#		self.setFixedSize(WINDOW_W, WINDOW_H)	# サイズ
+		self.resize(WINDOW_W, WINDOW_H)
 
 		# 撮影ボタン
 		self.capButton = QPushButton(TXT_CAP, self)			# 生成、キャプション
 		self.capButton.clicked.connect(self.on_clicked_cap)	# クリック時の動作
 		self.capButton.resize(self.capButton.sizeHint() )	# サイズ設定
-		self.capButton.move(50,50)							# 位置
+		self.capButton.move(BUTTON_CAP_X, BUTTON_CAP_Y)							# 位置
 		
 		# Nextボタン
 		self.nextButton = QPushButton(TXT_NEXT, self)			# 生成
 		self.nextButton.clicked.connect(self.on_clicked_next)	# クリック時
 		self.nextButton.resize(self.nextButton.sizeHint() )		# サイズ
-		self.nextButton.move(50, 100)							# 配置
+		self.nextButton.move(BUTTON_NEXT_X, BUTTON_NEXT_Y)							# 配置
 		self.nextButton.setEnabled(False)						# 無効化
+
+		# 映像ビュワー
+		self.bbb = QImage("image.jpg")
+		self.aaa = QPixmap.fromImage(self.bbb)
+		self.aaa = self.aaa.scaled(40,100)
+		
+		self.lab = QLabel(self)
+		self.lab.setPixmap(self.aaa)
+
 		
 		# ウィンドウ表示
 		self.show()
