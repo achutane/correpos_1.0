@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+import numpy as np
 import cv2
 
 APPNAME = "CORREPOS"
@@ -51,14 +52,17 @@ class myWindow(QWidget):
 		self.nextButton.move(BUTTON_NEXT_X, BUTTON_NEXT_Y)							# 配置
 		self.nextButton.setEnabled(False)						# 無効化
 
-		# 映像ビュワー
-		self.bbb = QImage("image.jpg")
-		self.aaa = QPixmap.fromImage(self.bbb)
-		self.aaa = self.aaa.scaled(40,100)
+		# 映像ビュワー		
+		self.cvCap = cv2.VideoCapture(0)
 		
-		self.lab = QLabel(self)
-		self.lab.setPixmap(self.aaa)
-
+		self.label1 = QLabel(self)
+		self.label1.move(100,100)
+		self.label1.resize(320,240)
+		
+		self.label2 = QLabel(self)
+		self.label2.move(500,100)
+		self.label2.resize(320,240)
+		
 		
 		# ウィンドウ表示
 		self.show()
@@ -69,12 +73,23 @@ class myWindow(QWidget):
 		# ToDo カメラ映像キャプチャ
 		self.nextButton.setEnabled(True)	# ToDo "次へ"ボタン有効化
 		
+		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
+		pix = QPixmap.fromImage(img)
+		self.label2.setPixmap(pix)
 		
 	# Nextボタンの動作
 	def on_clicked_next(self):
 		# 処理
 		print("hello")
 
+	# 再描画イベント
+	def paintEvent(self, event):
+		ret, self.frame = self.cvCap.read()
+		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
+		pix = QPixmap.fromImage(img)
+		self.label1.setPixmap(pix)
+
+	
 
 def main():
 	app = QApplication(sys.argv)
