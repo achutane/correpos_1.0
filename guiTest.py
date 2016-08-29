@@ -92,6 +92,10 @@ class myWindow(QWidget):
 		ret, frame1 = self.cvCap.read()	# キャプチャ
 		frame2 = cv2.resize(frame1, IMG_SIZE )	# リサイズ
 		frame2 = frame2[:,::-1]
+
+            for rect in facerect:
+        #検出した顔を囲む矩形の作成
+           cv2.rectangle(frame, tuple(rect[0:2]),tuple(rect[0:2] + rect[2:4]), color, thickness=2)
 		
 		self.frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)	# 色変換 BGR -> RGB
 		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)	# QImage生成
