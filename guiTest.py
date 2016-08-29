@@ -12,14 +12,17 @@ import cv2
 APPNAME = "CORREPOS"
 VERSION = "0.0.1"
 
-WINDOW_W = 1200
-WINDOW_H = 600
+WINDOW_SIZE = (1200, 600)
 
-BUTTON_CAP_X = 100
-BUTTON_CAP_Y = 500
+BUTTON_CAP_POS = (300, 450)
 
-BUTTON_NEXT_X = 600
-BUTTON_NEXT_Y = 500
+BUTTON_NEXT_POS = (600 + BUTTON_CAP_POS[0], BUTTON_CAP_POS[1] )
+
+IMG1_POS = (100, 100)
+
+IMG2_POS = (600 + IMG1_POS[0], IMG1_POS[1])
+
+IMG_SIZE = (400, 300)
 
 TXT_CAP = "撮影"
 TXT_RECAP = "再撮影"
@@ -34,34 +37,36 @@ class myWindow(QWidget):
 
 	def initUI(self):
 		# ウィンドウ設定
-		self.setWindowTitle(APPNAME)			# キャプション
-#		self.move(300,100)						# 位置
-#		self.setFixedSize(WINDOW_W, WINDOW_H)	# サイズ
-		self.resize(WINDOW_W, WINDOW_H)
+		self.setWindowTitle(APPNAME)						# キャプション
+#		self.move(300,100)									# 位置
+#		self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])	# サイズ
+		self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
 		# 撮影ボタン
-		self.capButton = QPushButton(TXT_CAP, self)			# 生成、キャプション
-		self.capButton.clicked.connect(self.on_clicked_cap)	# クリック時の動作
-		self.capButton.resize(self.capButton.sizeHint() )	# サイズ設定
-		self.capButton.move(BUTTON_CAP_X, BUTTON_CAP_Y)							# 位置
+		self.capButton = QPushButton(TXT_CAP, self)					# 生成、キャプション
+		self.capButton.clicked.connect(self.on_clicked_cap)			# クリック時の動作
+		self.capButton.resize(self.capButton.sizeHint() )			# サイズ設定
+		self.capButton.move(BUTTON_CAP_POS[0], BUTTON_CAP_POS[1])	# 位置
 		
 		# Nextボタン
-		self.nextButton = QPushButton(TXT_NEXT, self)			# 生成
-		self.nextButton.clicked.connect(self.on_clicked_next)	# クリック時
-		self.nextButton.resize(self.nextButton.sizeHint() )		# サイズ
-		self.nextButton.move(BUTTON_NEXT_X, BUTTON_NEXT_Y)							# 配置
-		self.nextButton.setEnabled(False)						# 無効化
+		self.nextButton = QPushButton(TXT_NEXT, self)					# 生成
+		self.nextButton.clicked.connect(self.on_clicked_next)			# クリック時
+		self.nextButton.resize(self.nextButton.sizeHint() )				# サイズ
+		self.nextButton.move(BUTTON_NEXT_POS[0], BUTTON_NEXT_POS[1])	# 配置
+		self.nextButton.setEnabled(False)								# 無効化
 
-		# 映像ビュワー		
+		# カメラ		
 		self.cvCap = cv2.VideoCapture(0)
 		
+		# 映像表示
 		self.label1 = QLabel(self)
-		self.label1.move(100,100)
-		self.label1.resize(320,240)
+		self.label1.move(IMG1_POS[0], IMG1_POS[1])
+		self.label1.resize(IMG_SIZE[0], IMG_SIZE[1])
 		
+		# スクショ表示
 		self.label2 = QLabel(self)
-		self.label2.move(500,100)
-		self.label2.resize(320,240)
+		self.label2.move(IMG2_POS[0], IMG2_POS[1])
+		self.label2.resize(IMG_SIZE[0], IMG_SIZE[1])
 		
 		
 		# ウィンドウ表示
@@ -77,17 +82,22 @@ class myWindow(QWidget):
 		pix = QPixmap.fromImage(img)
 		self.label2.setPixmap(pix)
 		
+		
 	# Nextボタンの動作
 	def on_clicked_next(self):
 		# 処理
 		print("hello")
+		print(self.nextButton.size)
 
 	# 再描画イベント
 	def paintEvent(self, event):
-		ret, self.frame = self.cvCap.read()
-		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
-		pix = QPixmap.fromImage(img)
-		self.label1.setPixmap(pix)
+		ret, frame1 = self.cvCap.read()	# キャプチャ
+		frame2 = cv2.resize(frame1, IMG_SIZE )	# リサイズ
+		
+		self.frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)	# 色変換 BGR -> RGB
+		img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)	# QImage生成
+		pix = QPixmap.fromImage(img)		# QPixmap生成
+		self.label1.setPixmap(pix)			# 画像貼り付け
 
 	
 
