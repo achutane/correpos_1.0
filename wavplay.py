@@ -25,7 +25,7 @@ def play(wav, mTime):
 
 
 if __name__ == '__main__':
-    
+    #play(ファイル名, 時間ms)
     play("bird05", 100)
     play("chime08", 100)
     play("chime14", 100)
