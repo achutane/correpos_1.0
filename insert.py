@@ -48,7 +48,7 @@ def Insert(count):
 # SQLを実行する
 # user(TIMESTANP)
 with connection.cursor() as cursor:
-    Insert(2)
+    Insert(0) #countを0に入れる
 
     
     sql = "SELECT count, TIMESTAMP FROM user WHERE count >= 0"
