@@ -8,6 +8,8 @@ from PyQt5.QtGui import *
 
 import numpy as np
 import datetime
+import pyaudio
+import wave
 import cv2
 
 
@@ -127,6 +129,8 @@ class initSheet(sheet):
         #物体認識（顔認識）の実行
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
         #座標取得
+        global width_s,height_s
+        
         for rec in facerect:
             width_s = rec[2]
             height_s = rec[3]
@@ -171,14 +175,14 @@ class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
-        self.b = QPushButton("test2", self)
-        self.b.clicked.connect(self.on_clicked)
+       # self.b = QPushButton("test2", self)
+        #self.b.clicked.connect(self.on_clicked)
         self.text = QTextEdit(self)
-        self.text.move(10,10)
-        self.text.resize(140,140)
+        self.text.move(50,400)
+        self.text.resize(400,150)
         self.videoLabel = QLabel(self)
         self.videoLabel.resize(400,300)        
-        self.videoLabel.move(500,100)
+        self.videoLabel.move(50,50)
         
     def on_clicked(self):
         print("clicked @ sheet2")
@@ -188,7 +192,7 @@ class driveSheet(sheet):
         super().start()
         self.auto()
         self.cvCap = cv2.VideoCapture(0)
-        self.check = 0
+        self.check = 1
 
 
           
@@ -198,25 +202,29 @@ class driveSheet(sheet):
         self.cvCap.release()
         self.cvCap = None
         
+        # タイマー終了
+        self.timer.stop()
+        
         
     def time_draw(self):
         d = datetime.datetime.today()
-        daystr=d.strftime("%Y-%m-%d %H:%M:%S")
-        #self.text.append(daystr)        
+        daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
+        self.text.append(daystr+"猫背を検知！")      
         
+        #タイマーの起動
     def auto(self):
         self.timer = QTimer()
-        self.timer.setInterval(1000)
+        self.timer.setInterval(100)
         self.timer.timeout.connect(self.timeout)
         self.timer.start()
            
+           #タイムアウト処理
     def timeout(self):
-        print ("hoge")
         self.nekose_check()
-        self.time_draw()
         self.timer.setInterval(10)
         self.timer.start()
         
+        #猫背をチェックする
     def nekose_check(self):
         ret, self.frame1 = self.cvCap.read() 
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
@@ -226,8 +234,15 @@ class driveSheet(sheet):
             self.height = rec[3]    
         
         if self.width >= width_s*1.5 and self.height >= height_s*1.5:
-            self.check = self.check + 1
+            self.check = (self.check + 1)%50
             print(self.check)
+            if self.check == 0:
+                self.play_kenti("dog01",100)
+                self.time_draw()
+                
+        else:
+            if self.check > 0:            
+                self.check = self.check - 1
 
     def paintEvent(self, event):
         if not(self.cvCap is None):
@@ -240,6 +255,27 @@ class driveSheet(sheet):
             pix = QPixmap.fromImage(img)            # QPixmap生成
             self.videoLabel.setPixmap(pix)            # 画像貼り付け
 
+
+        # 音をだす
+    def play_kenti(self, wav, mTime):        
+        wavfile="./wav_SE/"+wav+".wav"
+        wf = wave.open(wavfile, "r")
+        # ストリーム開始
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
+        data = wf.readframes(1024)
+        t=0;
+        while(t<mTime):
+            stream.write(data)
+            data = wf.readframes(1024)
+            t=t+1
+        stream.close()      # ストリーム終了
+        p.terminate()
+            
 
 
 
@@ -254,8 +290,8 @@ class myWindow(QWidget):
     def initUI(self):
         # ウィンドウ設定
         self.setWindowTitle(APPNAME)                        # キャプション
-#        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
-        self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
+        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
+ #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
         # シート作成
         self.sheets = []
