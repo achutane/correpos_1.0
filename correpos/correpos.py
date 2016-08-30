@@ -11,7 +11,7 @@ import datetime
 import pyaudio
 import wave
 import cv2
-
+import math
 
 
 
@@ -30,6 +30,9 @@ IMG_SIZE = (400, 300)
 IMG1_POS = (100, 150)
 IMG2_POS = (600 + IMG1_POS[0], IMG1_POS[1])
 
+
+TXT_DESC1 = "正しい姿勢で座り、[撮影]を押します"
+TXT_DESC2 = "再度撮影する場合は[撮影]、猫背検知を開始するには[次へ]を押します"
 
 TXT_CAP = "撮影"
 TXT_RECAP = "再撮影"
@@ -82,6 +85,10 @@ class initSheet(sheet):
         self.nextButton.move(BUTTON_NEXT_POS[0], BUTTON_NEXT_POS[1])    # 配置
         self.nextButton.setEnabled(False)                                # 無効化
 
+        # --- ラベル配置 ---
+        self.descLabel = QLabel(self)
+        self.descLabel.move(100, 50)
+        self.descLabel.resize(1100, 30)
         
         # --- 画像配置 ---
         # 映像表示
@@ -106,6 +113,9 @@ class initSheet(sheet):
         # ボタン初期化
         self.capButton.setText(TXT_CAP)        # 撮影ボタン
         self.nextButton.setEnabled(False)    # 次へボタン
+        
+        # ラベル
+        self.descLabel.setText(TXT_DESC1)
         
     # 動作終了
     def stop(self):
@@ -134,7 +144,9 @@ class initSheet(sheet):
         for rec in facerect:
             width_s = rec[2]
             height_s = rec[3]
-  
+        
+        # ラベル
+        self.descLabel.setText(TXT_DESC2)
         
         # カメラ映像キャプチャ
         img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
@@ -183,6 +195,10 @@ class driveSheet(sheet):
         self.videoLabel = QLabel(self)
         self.videoLabel.resize(400,300)        
         self.videoLabel.move(50,50)
+        
+        # deb:再設定
+        self.b = QPushButton("再設定", self)
+        self.b.clicked.connect(self.on_clicked)
         
     def on_clicked(self):
         print("clicked @ sheet2")
@@ -233,7 +249,9 @@ class driveSheet(sheet):
             self.width = rec[2]
             self.height = rec[3]    
         
-        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
+        # 猫背チェック
+#        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
+        if(self.evalNekose(self.width, self.height, width_s, height_s)):
             self.check = (self.check + 1)%50
             print(self.check)
             if self.check == 0:
@@ -244,6 +262,21 @@ class driveSheet(sheet):
             if self.check > 0:            
                 self.check = self.check - 1
 
+    # 猫背評価
+    def evalNekose(self, w1, h1, w0, h0):
+        s1 = w1 * h1	# 現在の面積
+        s0 = w0 * h0	# 基準の面積
+        th = 35			# 閾値
+        
+        # 評価
+        ev = abs( (s1 - s0) / s0 * 100 )
+        
+        # 出力
+        print(ev)
+        
+        # 判定
+        return ev > th
+        
     def paintEvent(self, event):
         if not(self.cvCap is None):
             ret, self.frame1 = self.cvCap.read()    # キャプチャ
