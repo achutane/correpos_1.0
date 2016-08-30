@@ -1,0 +1,76 @@
+PyQt5メモ
+
+
+# --- 一般 --------------------------------
+ひな形
+#!/usr/bin/python3
+# -*- coding: shift-jis -*-
+
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+def main():
+	app = QApplication(sys.argv)
+
+	# ここに処理
+	
+	sys.exit(app.exec_())
+
+if __name__ == '__main__':
+	main()
+# ---------------------------------------
+
+
+# --- クラス関連 ---
+メンバ変数 : "self.変数名" (ex: self.member )
+
+プライベートメンバ変数："self.__変数名" (ex: self.__privateMember )
+
+
+
+# --- ボタン関連 -----------------------------
+
+ボタンのラベルを変更
+	button.setText("sample")
+
+ボタンクリック時の動作を変更
+	button.clicked.connect( func )
+	
+	def func(self)
+		print("test")
+	
+
+
+
+# --- CV2関連 ----------------------
+
+キャプチャ開始
+	cap = cv2.VideoCapture(0)	# 0 はデバイス番号
+
+フレーム画像取得
+	ret, frame = cap.read()
+
+フレーム画像リサイズ
+	frame2 = cv2.resize(frame, (800, 600) )
+
+色空間の変換
+	frame3 = cv2.cvtColor( frame2, cv2.COLOR_BGR2RGB)	# BGR(デフォルト) -> RGB
+
+QImageに変換
+	qimg = QImage(frame3.data, frame3.shape[1], frame3.shape[0], QImage.Format_RGB888)
+
+
+
+
+
+
+# --- 画像関連 ------
+
+QImage -> QPixmap 変換
+	pix = QPixmap.fromImage(qimg)
+
+ラベルに画像貼り付け
+	label = QLabel(self)
+	label.setPixmap(pix)
+
