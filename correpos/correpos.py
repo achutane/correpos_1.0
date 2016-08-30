@@ -196,14 +196,16 @@ class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
-       # self.b = QPushButton("test2", self)
-        #self.b.clicked.connect(self.on_clicked)
-        self.text = QTextEdit(self)
+        self.text = QTextEdit(self)		# ログ枠
         self.text.move(50,400)
         self.text.resize(400,150)
-        self.videoLabel = QLabel(self)
+        self.videoLabel = QLabel(self)	# 映像表示
         self.videoLabel.resize(400,300)        
         self.videoLabel.move(50,50)
+        self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
+        self.noticeEnable.move(700, 50)
+        self.noticeEnable.setText("通知する")
+        self.noticeEnable.setTristate(False)
         
         # deb:再設定
         self.b = QPushButton("再設定", self)
@@ -218,6 +220,8 @@ class driveSheet(sheet):
         self.auto()
         self.cvCap = cv2.VideoCapture(0)
         self.check = 1
+        
+        self.noticeEnable.setChecked(True)
 
 
           
@@ -260,17 +264,24 @@ class driveSheet(sheet):
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
-        if(self.evalNekose(self.width, self.height, width_s, height_s)):
-            self.check = (self.check + 1)%50
+
+        if(self.evalNekose(self.width, self.height, width_s, height_s)):    # 評価
+            self.check = (self.check + 1)%50    # カウント
             print(self.check)
-            if self.check == 0:
-                self.play_kenti("dog01",100)
-                self.time_draw()
+            if self.check == 0: # 50カウント後
+                self.notice()       # 通知
+                self.time_draw()    # ログ追加
                 
         else:
             if self.check > 0:            
                 self.check = self.check - 1
 
+    # 通知を行う
+    def notice(self):
+        if(self.noticeEnable.isChecked() ): # 通知をする場合
+            self.play_kenti("dog01", 100)   # 音
+            # その他通知(あれば)
+    
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
         s1 = w1 * h1	# 現在の面積
