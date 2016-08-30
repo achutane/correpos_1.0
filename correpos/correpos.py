@@ -207,6 +207,23 @@ class driveSheet(sheet):
         self.noticeEnable.setText("通知する")
         self.noticeEnable.setTristate(False)
         
+        self.descLabel = QLabel(self)
+        self.descLabel.move(650, 78)
+        #self.descLabel.resize(50, 30)
+        self.descLabel.setText("通知音設定 ： ")
+        self.soundselect1=QRadioButton("犬", self)  #音選択　ラジオボタン作成
+        self.soundselect1.move(720,75)
+        self.soundselect2=QRadioButton("鳥", self)
+        self.soundselect2.move(770,75)
+        self.soundselect3=QRadioButton("トラ", self)
+        self.soundselect3.move(820,75)
+        self.soundselectgroup=QButtonGroup(self)    #ラジオボタン グループ作成
+        self.soundselectgroup.addButton(self.soundselect1)#
+        self.soundselectgroup.addButton(self.soundselect2)
+        self.soundselectgroup.addButton(self.soundselect3)
+        
+        
+        
         # deb:再設定
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
@@ -279,7 +296,15 @@ class driveSheet(sheet):
     # 通知を行う
     def notice(self):
         if(self.noticeEnable.isChecked() ): # 通知をする場合
-            self.play_kenti("dog01", 100)   # 音
+            sound = "dog01"
+            if(self.soundselect1.isChecked()):
+                sound="dog01"
+            elif(self.soundselect2.isChecked()):
+                sound="bird05"
+            elif(self.soundselect3.isChecked()):
+                sound="tiger01"
+                
+            self.play_kenti(sound,100)
             # その他通知(あれば)
     
     # 猫背評価
