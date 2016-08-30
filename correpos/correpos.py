@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: sjis -*-
+# -*- coding: utf-8 -*-
 
 import sys
 from PyQt5.QtWidgets import *
