@@ -12,7 +12,7 @@ import pyaudio
 import wave
 import cv2
 import math
-
+import copy
 
 
 # --- 定数 ---
@@ -131,27 +131,31 @@ class initSheet(sheet):
     
     # 撮影ボタンの動作
     def on_clicked_cap(self):
+    	# テキスト変更
         self.capButton.setText(TXT_RECAP)    # テキスト変更
-        self.nextButton.setEnabled(True)    # ToDo "次へ"ボタン有効化
+        self.descLabel.setText(TXT_DESC2)
+        
+        # [次へ]有効化
+        self.nextButton.setEnabled(True)
         
         
-        color = (255, 255, 255) #白
-        #物体認識（顔認識）の実行
-        facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
-        #座標取得
+        # カメラ映像キャプチャ
+        frame2 = cv2.resize(self.frame1, IMG_SIZE )		# リサイズ
+        frame2 = frame2[:,::-1]							# 左右反転
+        frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)    # 色変換 BGR -> RGB
+        img = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
+        pix = QPixmap.fromImage(img)
+        self.capLabel.setPixmap(pix)	# 画像貼り付け
+        
+        # 顔のサイズ取得
         global width_s,height_s
-        
+        color = (255, 255, 255) # 白
+        facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))	# 顔認識
+        # サイズ取り出し
         for rec in facerect:
             width_s = rec[2]
             height_s = rec[3]
-        
-        # ラベル
-        self.descLabel.setText(TXT_DESC2)
-        
-        # カメラ映像キャプチャ
-        img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)
-        pix = QPixmap.fromImage(img)
-        self.capLabel.setPixmap(pix)
+            
         
         
     # Nextボタンの動作
@@ -159,22 +163,27 @@ class initSheet(sheet):
         # 処理
         print("next")
         self.parent.setSheet(1)
-
-    """
-    def on_clicked(self):
-        print("clicked @ sheet1")
-        self.parent.setSheet(1)
-    """
     
     # 再描画イベント：タイマーにしたい
     def paintEvent(self, event):
         if not(self.cvCap is None):
-            ret, self.frame1 = self.cvCap.read()    # キャプチャ
-            frame2 = cv2.resize(self.frame1, IMG_SIZE )    # リサイズ
-            frame2 = frame2[:,::-1]                    # 左右反転
-        
-            self.frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)    # 色変換 BGR -> RGB
-            img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)    # QImage生成
+            ret, self.frame1 = self.cvCap.read()			# キャプチャ
+            frame = copy.deepcopy(self.frame1)				# フレームのコピー
+            
+            #物体認識（顔認識）の実行
+            facerect = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
+
+            color = (255, 255, 255) # 白
+            for rect in facerect:
+                #検出した顔を囲む矩形の作成
+                cv2.rectangle(frame, tuple(rect[0:2]),tuple(rect[0:2] + rect[2:4]), color, thickness=2)
+
+            
+            frame2 = cv2.resize(frame, IMG_SIZE )		# リサイズ
+            frame2 = frame2[:,::-1]							# 左右反転
+            
+            frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)    # 色変換 BGR -> RGB
+            img = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)    # QImage生成
             pix = QPixmap.fromImage(img)            # QPixmap生成
             self.videoLabel.setPixmap(pix)            # 画像貼り付け
 
