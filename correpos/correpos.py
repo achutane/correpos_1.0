@@ -217,10 +217,14 @@ class driveSheet(sheet):
         self.soundselect2.move(770,75)
         self.soundselect3=QRadioButton("トラ", self)
         self.soundselect3.move(820,75)
+        self.soundselect4=QRadioButton("!", self)
+        self.soundselect4.move(870,75)
         self.soundselectgroup=QButtonGroup(self)    #ラジオボタン グループ作成
         self.soundselectgroup.addButton(self.soundselect1)#
         self.soundselectgroup.addButton(self.soundselect2)
         self.soundselectgroup.addButton(self.soundselect3)
+        self.soundselectgroup.addButton(self.soundselect4)
+
         
         
         
@@ -303,6 +307,9 @@ class driveSheet(sheet):
                 sound="bird05"
             elif(self.soundselect3.isChecked()):
                 sound="tiger01"
+            
+            elif(self.soundselect4.isChecked()):
+                sound="nc131523"
                 
             self.play_kenti(sound,100)
             # その他通知(あれば)
