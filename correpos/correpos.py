@@ -151,12 +151,24 @@ class initSheet(sheet):
         global width_s,height_s
         color = (255, 255, 255) # 白
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))	# 顔認識
-        # サイズ取り出し
-        for rec in facerect:
-            width_s = rec[2]
-            height_s = rec[3]
-            
+        print(facerect) # 認識結果出力
         
+        # サイズ取り出し
+        # 顔選択:とりあえず面積最大
+        w0 = facerect[0][2]    # 幅
+        h0 = facerect[0][3]    # 高さ
+        s0 = w0 * h0
+        for i in range(1, len(facerect)):   # すべての顔について
+            w1 = facerect[i][2]
+            h1 = facerect[i][3]
+            s1 = w1 * h1
+            if(s0 < s1):    # 面積が大きい
+                w0 = w1     # 更新
+                h0 = h1
+                s0 = s1
+        # サイズ確定
+        width_s = w0
+        height_s = h0
         
     # Nextボタンの動作
     def on_clicked_next(self):
@@ -278,10 +290,24 @@ class driveSheet(sheet):
     def nekose_check(self):
         ret, self.frame1 = self.cvCap.read() 
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
-        #座標取得
-        for rec in facerect:
-            self.width = rec[2]
-            self.height = rec[3]    
+        print(facerect)
+        
+        # サイズ取り出し
+        # 顔選択:とりあえず面積最大
+        w0 = facerect[0][2]    # 幅
+        h0 = facerect[0][3]    # 高さ
+        s0 = w0 * h0
+        for i in range(1, len(facerect)):   # すべての顔について
+            w1 = facerect[i][2]
+            h1 = facerect[i][3]
+            s1 = w1 * h1
+            if(s0 < s1):    # 面積が大きい
+                w0 = w1     # 更新
+                h0 = h1
+                s0 = s1
+        # サイズ確定
+        self.width = w0
+        self.height = h0
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
