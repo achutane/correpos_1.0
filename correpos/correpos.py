@@ -8,11 +8,11 @@ from PyQt5.QtGui import *
 
 import numpy as np
 import datetime
-import pyaudio
 import wave
 import cv2
 import math
 import copy
+import wavplay_pygame
 
 
 # --- 定数 ---
@@ -64,7 +64,6 @@ class sheet(QFrame):
         # 無効化
         self.resize(0,0)
         self.setVisible(False)
-
 
 
 # --- 初期画面 ---
@@ -246,10 +245,29 @@ class driveSheet(sheet):
         self.soundselectgroup.addButton(self.soundselect2)
         self.soundselectgroup.addButton(self.soundselect3)
         self.soundselectgroup.addButton(self.soundselect4)
+        
+        
+        self.w=QWidget(self) #音量設定の枠wの作成
+        self.w.setGeometry(650,100,300,100) #音量設定の枠の座標 (y,x,width,height)     
 
+        self.slider = QSlider(Qt.Vertical)  #スライダの向き
+        self.slider.setRange(0, 100)  # スライダの範囲
+        self.slider.setValue(50)  # 初期値
+        self.slider_label = QLabel('Volume :'+str(self.slider.value())) #volume:スライダの値
+
+        self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行
+                
+        self.checkbutton = QPushButton("音量テスト") #音量の確認ボタン
+        self.checkbutton.setFocusPolicy(Qt.NoFocus)
+        self.checkbutton.clicked.connect(self.button_clicked) #音量テストのボタンを押すとbutton_clicked実行
         
+        self.changevolume=QHBoxLayout(self) #音量テストをまとめる横方向のレイアウトの作成
+        self.changevolume.addWidget(self.slider_label)
+        self.changevolume.addWidget(self.slider)
+        self.changevolume.addWidget(self.checkbutton)
         
-        
+        self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
+
         # deb:再設定
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
@@ -348,11 +366,12 @@ class driveSheet(sheet):
             elif(self.soundselect4.isChecked()):
                 sound="nc131523"
                 
-            self.play_kenti(sound,100)
+            wavplay_pygame.play(sound,self.slider.value())
             # その他通知(あれば)
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
+
         s1 = w1 * h1	# 現在の面積
         s0 = w0 * h0	# 基準の面積
         th = 35			# 閾値
@@ -377,30 +396,25 @@ class driveSheet(sheet):
             pix = QPixmap.fromImage(img)            # QPixmap生成
             self.videoLabel.setPixmap(pix)            # 画像貼り付け
 
-
-        # 音をだす
-    def play_kenti(self, wav, mTime):        
-        wavfile="./wav_SE/"+wav+".wav"
-        wf = wave.open(wavfile, "r")
-        # ストリーム開始
-        p = pyaudio.PyAudio()
-        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                        channels=wf.getnchannels(),
-                        rate=wf.getframerate(),
-                        output=True)
-
-        data = wf.readframes(1024)
-        t=0;
-        while(t<mTime):
-            stream.write(data)
-            data = wf.readframes(1024)
-            t=t+1
-        stream.close()      # ストリーム終了
-        p.terminate()
             
-
-
-
+    def text_draw(self): #音量設定のVolumeが変更されたときに表示テキストを変える
+        self.slider_label.setText('Volume :'+str(self.slider.value()))
+        
+    def button_clicked(self): #音量テストのボタンが押されたときに走る
+        button = self.sender()
+        if button is None or not isinstance(button,QPushButton):
+            return
+        if(self.noticeEnable.isChecked() ): # 通知をする場合
+            sound = "dog01"
+            if(self.soundselect1.isChecked()):
+                sound="dog01"
+            elif(self.soundselect2.isChecked()):
+                sound="bird05"
+            elif(self.soundselect3.isChecked()):
+                sound="tiger01"
+            elif(self.soundselect4.isChecked()):
+                sound="nc131523"
+            wavplay_pygame.play(sound,self.slider.value())
 
 # --- ウィンドウ ---
 class myWindow(QWidget):
