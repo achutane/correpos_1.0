@@ -10,7 +10,7 @@ import time
 
 def play(wav, volume):
     #wav="tiger01"
-    wavfile="./wav_SE/"+wav+".wav"
+    wavfile="./wav_SE/"+wav
 
     pygame.mixer.init()
     wav=pygame.mixer.Sound(wavfile)
@@ -18,5 +18,5 @@ def play(wav, volume):
 #pygame.mixer.music.load('cat1a.mp3')
     wav.set_volume(volume*0.01) #パラメータは0.0~1.0の浮動小数点です 
     wav.play(0) # loop count
-    time.sleep(1)   #1秒再生
-    wav.stop()  #停止
+    #time.sleep(1)   #1秒再生
+    #wav.stop()  #停止

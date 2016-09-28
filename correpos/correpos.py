@@ -13,7 +13,8 @@ import cv2
 import math
 import copy
 import wavplay_pygame
-
+from os.path import join, relpath
+from glob import glob
 
 # --- 定数 ---
 
@@ -47,6 +48,8 @@ cascade_path = "haarcascade_frontalface_alt.xml"
 
 #カスケード分類器の特徴量を取得する
 cascade = cv2.CascadeClassifier(cascade_path) 
+
+
 
 # --- シートテンプレ ---
 class sheet(QFrame):
@@ -232,6 +235,21 @@ class driveSheet(sheet):
         self.descLabel.move(650, 78)
         #self.descLabel.resize(50, 30)
         self.descLabel.setText("通知音設定 ： ")
+        
+
+        self.combo_selectSE = QComboBox(self)
+        self.combo_selectSE.move(750,75)
+        path='wav_SE'
+        list = [relpath(x, path) for x in glob(join(path, '*.wav'))]
+        for file in list:
+            self.combo_selectSE.addItem(file)
+        self.selectSE=list[0]
+        
+        self.combo_selectSE.activated[str].connect(self.selectSE_onActivated)
+        
+
+        
+        """
         self.soundselect1=QRadioButton("犬", self)  #音選択　ラジオボタン作成
         self.soundselect1.move(720,75)
         self.soundselect2=QRadioButton("鳥", self)
@@ -245,7 +263,7 @@ class driveSheet(sheet):
         self.soundselectgroup.addButton(self.soundselect2)
         self.soundselectgroup.addButton(self.soundselect3)
         self.soundselectgroup.addButton(self.soundselect4)
-        
+        """
         
         self.w=QWidget(self) #音量設定の枠wの作成
         self.w.setGeometry(650,100,300,100) #音量設定の枠の座標 (y,x,width,height)     
@@ -355,6 +373,7 @@ class driveSheet(sheet):
     # 通知を行う
     def notice(self):
         if(self.noticeEnable.isChecked() ): # 通知をする場合
+            """
             sound = "dog01"
             if(self.soundselect1.isChecked()):
                 sound="dog01"
@@ -365,8 +384,8 @@ class driveSheet(sheet):
             
             elif(self.soundselect4.isChecked()):
                 sound="nc131523"
-                
-            wavplay_pygame.play(sound,self.slider.value())
+            """ 
+            wavplay_pygame.play(self.selectSE,self.slider.value())
             # その他通知(あれば)
     
     # 猫背評価
@@ -404,6 +423,7 @@ class driveSheet(sheet):
         button = self.sender()
         if button is None or not isinstance(button,QPushButton):
             return
+        """
         if(self.noticeEnable.isChecked() ): # 通知をする場合
             sound = "dog01"
             if(self.soundselect1.isChecked()):
@@ -414,7 +434,16 @@ class driveSheet(sheet):
                 sound="tiger01"
             elif(self.soundselect4.isChecked()):
                 sound="nc131523"
-            wavplay_pygame.play(sound,self.slider.value())
+        """
+        wavplay_pygame.play(self.selectSE,self.slider.value())
+        
+    def selectSE_onActivated(self,text):
+        self.selectSE=text
+        wavplay_pygame.play(text,self.slider.value())
+
+        
+        #self.label.setText(text)
+        #self.label.adjustSize()
 
 # --- ウィンドウ ---
 class myWindow(QWidget):
