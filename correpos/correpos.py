@@ -223,6 +223,13 @@ class driveSheet(sheet):
         self.videoLabel = QLabel(self)	# 映像表示
         self.videoLabel.resize(400,300)        
         self.videoLabel.move(50,50)
+        
+        self.nekozegauge_text=QLabel(self)
+        self.nekozegauge_text.setText("猫背ゲージ　")
+        self.nekozegauge_text.setGeometry(50,360,70,30)
+        self.nekoze_pbar = QProgressBar(self)
+        self.nekoze_pbar.setGeometry(120,370,200,10)
+        
         self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
@@ -318,7 +325,6 @@ class driveSheet(sheet):
     def nekose_check(self):
         ret, self.frame1 = self.cvCap.read() 
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
-        print(facerect)
         
         if(len(facerect) > 0):	# 顔検出した 
             # サイズ取り出し
@@ -342,15 +348,18 @@ class driveSheet(sheet):
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
 
         if(self.evalNekose(self.width, self.height, width_s, height_s)):    # 評価
-            self.check = (self.check + 1)%50    # カウント
+            self.check = (self.check + 1)%51    # カウント
+            self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
             print(self.check)
-            if self.check == 0: # 50カウント後
+            if self.check == 50: # 50カウント後
                 self.notice()       # 通知
                 self.time_draw()    # ログ追加
                 
         else:
             if self.check > 0:            
                 self.check = self.check - 1
+                self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
+
 
     # 通知を行う
     def notice(self):
