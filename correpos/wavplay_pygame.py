@@ -8,7 +8,7 @@ import pygame.mixer
 
 def play(wav, volume):
     
-    wavfile="./wav_SE/"+wav+".wav"
+    wavfile="./wav_SE/"+wav
 
     pygame.mixer.init()
     wav=pygame.mixer.Sound(wavfile)

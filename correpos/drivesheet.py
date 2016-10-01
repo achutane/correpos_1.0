@@ -43,31 +43,22 @@ class driveSheet(sheet):
         self.descLabel.move(650, 78)
         #self.descLabel.resize(50, 30)
         self.descLabel.setText("通知音設定 ： ")
-        self.soundselect1=QRadioButton("犬", self)  #音選択　ラジオボタン作成
-        self.soundselect1.move(720,75)
-        self.soundselect2=QRadioButton("鳥", self)
-        self.soundselect2.move(770,75)
-        self.soundselect3=QRadioButton("トラ", self)
-        self.soundselect3.move(820,75)
-        self.soundselect4=QRadioButton("!", self)
-        self.soundselect4.move(870,75)
-        self.soundselectgroup=QButtonGroup(self)    #ラジオボタン グループ作成
-        self.soundselectgroup.addButton(self.soundselect1)#
-        self.soundselectgroup.addButton(self.soundselect2)
-        self.soundselectgroup.addButton(self.soundselect3)
-        self.soundselectgroup.addButton(self.soundselect4)
-        
-        
+        self.combo_selectSE = QComboBox(self) #SEを変えるComboBoxの作成
+        self.combo_selectSE.move(750,75) #ComboBoxの座標指定
+        path='wav_SE'
+        list = [relpath(x, path) for x in glob(join(path, '*.wav'))] #wav_SEのファイル名を抽出
+        for file in list:
+            self.combo_selectSE.addItem(file)
+        self.selectSE=list[0] #select_SEに文字列を代入　後でwavplayで使用
+        self.combo_selectSE.activated[str].connect(self.selectSE_onActivated) #ComboBoxで選んだ時の動作
+           
         self.w=QWidget(self) #音量設定の枠wの作成
         self.w.setGeometry(650,100,300,100) #音量設定の枠の座標 (y,x,width,height)     
-
         self.slider = QSlider(Qt.Vertical)  #スライダの向き
         self.slider.setRange(0, 100)  # スライダの範囲
         self.slider.setValue(50)  # 初期値
         self.slider_label = QLabel('Volume :'+str(self.slider.value())) #volume:スライダの値
-
-        self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行
-                
+        self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行                
         self.checkbutton = QPushButton("音量テスト") #音量の確認ボタン
         self.checkbutton.setFocusPolicy(Qt.NoFocus)
         self.checkbutton.clicked.connect(self.button_clicked) #音量テストのボタンを押すとbutton_clicked実行
@@ -75,8 +66,7 @@ class driveSheet(sheet):
         self.changevolume=QHBoxLayout(self) #音量テストをまとめる横方向のレイアウトの作成
         self.changevolume.addWidget(self.slider_label)
         self.changevolume.addWidget(self.slider)
-        self.changevolume.addWidget(self.checkbutton)
-        
+        self.changevolume.addWidget(self.checkbutton)        
         self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
 
         # deb:再設定
@@ -216,20 +206,14 @@ class driveSheet(sheet):
         button = self.sender()
         if button is None or not isinstance(button,QPushButton):
             return
-        if(self.noticeEnable.isChecked() ): # 通知をする場合
-            sound = "dog01"
-            if(self.soundselect1.isChecked()):
-                sound="dog01"
-            elif(self.soundselect2.isChecked()):
-                sound="bird05"
-            elif(self.soundselect3.isChecked()):
-                sound="tiger01"
-            elif(self.soundselect4.isChecked()):
-                sound="nc131523"
-            wavplay_pygame.play(sound,self.slider.value())
+        wavplay_pygame.play(self.selectSE,self.slider.value())
     
     def message_box(self): # ポップアップ表示
         root = tkinter.Tk()
         root.withdraw() # <- これでTkの小さいウィンドウが非常時になる
         tkmsg.showwarning('correpos', '猫背検知！！')
         # 参考URL http://ameblo.jp/hitochan007/entry-12028166427.html
+        
+    def selectSE_onActivated(self,text):
+        self.selectSE=text #selectSEにファイル名を代入
+        wavplay_pygame.play(text,self.slider.value()) #音を鳴ら
