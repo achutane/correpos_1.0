@@ -38,6 +38,10 @@ class driveSheet(sheet):
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
         self.noticeEnable.setTristate(False)
+        self.message_boxEnable = QCheckBox(self)	# 通知オン・オフ
+        self.message_boxEnable.move(800, 50)
+        self.message_boxEnable.setText("ポップアップ通知")
+        self.message_boxEnable.setTristate(False)
         
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
@@ -94,6 +98,7 @@ class driveSheet(sheet):
         self.check = 1
         
         self.noticeEnable.setChecked(True)
+        self.message_boxEnable.setChecked(True)
 
 
           
@@ -179,7 +184,11 @@ class driveSheet(sheet):
                 
             wavplay_pygame.play(sound,self.slider.value())
             # その他通知(あれば)
-            self.message_box()
+            if(self.message_boxEnable.isChecked() ): # 通知をする場合
+                self.message_box()
+        else:
+            self.message_boxEnable.setChecked(False)
+
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
