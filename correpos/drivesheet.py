@@ -13,7 +13,8 @@ import cv2
 import wavplay_pygame
 import tkinter # ポップアップ表示に必要
 import tkinter.messagebox as tkmsg # ポップアップ表示に必要
-
+from os.path import join, relpath
+from glob import glob
 
 # --- 定数 ---
 IMG_SIZE = (400, 300)
