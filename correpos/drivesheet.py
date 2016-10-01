@@ -45,24 +45,24 @@ class driveSheet(sheet):
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
         self.noticeEnable.setTristate(False)
+        self.message_boxEnable = QCheckBox(self)	# ポップアップ通知オン・オフ
+        self.message_boxEnable.move(800, 50)
+        self.message_boxEnable.setText("ポップアップ通知")
+        self.message_boxEnable.setTristate(False)
         
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
         #self.descLabel.resize(50, 30)
         self.descLabel.setText("通知音設定 ： ")
-        self.soundselect1=QRadioButton("犬", self)  #音選択　ラジオボタン作成
-        self.soundselect1.move(720,75)
-        self.soundselect2=QRadioButton("鳥", self)
-        self.soundselect2.move(770,75)
-        self.soundselect3=QRadioButton("トラ", self)
-        self.soundselect3.move(820,75)
-        self.soundselect4=QRadioButton("!", self)
-        self.soundselect4.move(870,75)
-        self.soundselectgroup=QButtonGroup(self)    #ラジオボタン グループ作成
-        self.soundselectgroup.addButton(self.soundselect1)#
-        self.soundselectgroup.addButton(self.soundselect2)
-        self.soundselectgroup.addButton(self.soundselect3)
-        self.soundselectgroup.addButton(self.soundselect4)
+        self.combo_selectSE = QComboBox(self) #ComboBoxの作成
+        self.combo_selectSE.move(750,75) #ComboBoxの座標指定
+        path='wav_SE'
+        list = [relpath(x, path) for x in glob(join(path, '*.wav'))] #wav_SEのファイル名を抽出
+        for file in list:
+            self.combo_selectSE.addItem(file)
+        self.selectSE=list[0] #select_SEに文字列を代入　後でwavplayで使用
+        self.combo_selectSE.activated[str].connect(self.selectSE_onActivated) #ComboBoxで選んだ時の動作
+     
         
         
         self.w=QWidget(self) #音量設定の枠wの作成
@@ -101,6 +101,7 @@ class driveSheet(sheet):
         self.check = 1
         
         self.noticeEnable.setChecked(True)
+        self.message_boxEnable.setChecked(True)
 
 
           
@@ -171,23 +172,12 @@ class driveSheet(sheet):
                 self.check = self.check - 1
                 self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
 
-    # 通知を行う
     def notice(self):
         if(self.noticeEnable.isChecked() ): # 通知をする場合
-            sound = "dog01"
-            if(self.soundselect1.isChecked()):
-                sound="dog01"
-            elif(self.soundselect2.isChecked()):
-                sound="bird05"
-            elif(self.soundselect3.isChecked()):
-                sound="tiger01"
-            
-            elif(self.soundselect4.isChecked()):
-                sound="nc131523"
-                
-            wavplay_pygame.play(sound,self.slider.value())
+            wavplay_pygame.play(self.selectSE,self.slider.value()) #選択したSEを鳴らす
             # その他通知(あれば)
-            self.message_box()
+            if(self.message_boxEnable.isChecked() ): # 通知をする場合
+                self.message_box()
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
@@ -224,20 +214,14 @@ class driveSheet(sheet):
         button = self.sender()
         if button is None or not isinstance(button,QPushButton):
             return
-        if(self.noticeEnable.isChecked() ): # 通知をする場合
-            sound = "dog01"
-            if(self.soundselect1.isChecked()):
-                sound="dog01"
-            elif(self.soundselect2.isChecked()):
-                sound="bird05"
-            elif(self.soundselect3.isChecked()):
-                sound="tiger01"
-            elif(self.soundselect4.isChecked()):
-                sound="nc131523"
-            wavplay_pygame.play(sound,self.slider.value())
+        wavplay_pygame.play(self.selectSE,self.slider.value())
     
     def message_box(self): # ポップアップ表示
         root = tkinter.Tk()
         root.withdraw() # <- これでTkの小さいウィンドウが非常時になる
         tkmsg.showwarning('correpos', '猫背検知！！')
         # 参考URL http://ameblo.jp/hitochan007/entry-12028166427.html
+        
+    def selectSE_onActivated(self,text):
+        self.selectSE=text #selectSEにファイル名を代入
+        wavplay_pygame.play(text,self.slider.value()) #音を鳴ら
