@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=C:\Users\s1413114\Documents\python\correpos_1.0\pyqt"
+set "VIRTUAL_ENV=C:\Users\Adachi\enPiT\correpos_1.0\pyqt"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
