@@ -13,7 +13,8 @@ import cv2
 import wavplay_pygame
 import tkinter # ポップアップ表示に必要
 import tkinter.messagebox as tkmsg # ポップアップ表示に必要
-
+from os.path import join, relpath
+from glob import glob
 
 # --- 定数 ---
 IMG_SIZE = (400, 300)
@@ -34,6 +35,12 @@ class driveSheet(sheet):
         self.videoLabel = QLabel(self)	# 映像表示
         self.videoLabel.resize(400,300)        
         self.videoLabel.move(50,50)
+        self.nekozegauge_text=QLabel(self) #猫背ゲージの作成
+        self.nekozegauge_text.setText("猫背ゲージ　")
+        self.nekozegauge_text.setGeometry(50,360,70,30)
+        self.nekoze_pbar = QProgressBar(self)  #ゲージ本体
+        self.nekoze_pbar.setGeometry(120,370,200,10)
+        
         self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
@@ -153,15 +160,16 @@ class driveSheet(sheet):
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
 
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
-            self.check = (self.check + 1)%50    # カウント
-            print(self.check)
-            if self.check == 0: # 50カウント後
+            self.check = (self.check + 1)%51    # カウント
+            self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
+            if self.check == 50: # 50カウント後
                 self.notice()       # 通知
                 self.time_draw()    # ログ追加
                 
         else:
             if self.check > 0:            
                 self.check = self.check - 1
+                self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
 
     # 通知を行う
     def notice(self):
