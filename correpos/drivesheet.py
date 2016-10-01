@@ -156,7 +156,6 @@ class driveSheet(sheet):
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
             self.check = (self.check + 1)%51    # カウント
             self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
-            print(self.check)
             if self.check == 50: # 50カウント後
                 self.notice()       # 通知
                 self.time_draw()    # ログ追加
