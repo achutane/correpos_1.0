@@ -50,6 +50,25 @@ class driveSheet(sheet):
         self.message_boxEnable.setText("ポップアップ通知")
         self.message_boxEnable.setTristate(False)
         
+        #判定厳しさ調整のラジオボタン作成
+        self.sldlevel = QLabel(self)
+        self.sldlevel.move(650,240)
+        self.sldlevel.setText("判定level")
+        self.level1=QRadioButton("Easy", self)    #判定レベル　ラジオボタン作成
+        self.level1.move(730,240)
+        self.level2=QRadioButton("Normal", self)
+        self.level2.move(800,240)
+        self.level3=QRadioButton("Hard", self)
+        self.level3.move(890,240)
+        self.levelgroup=QButtonGroup(self)    #ラジオボタン　グループ作成
+        self.levelgroup.addButton(self.level1)
+        self.levelgroup.addButton(self.level2)
+        self.levelgroup.addButton(self.level3)
+        self.leveltext = QLabel(self)
+        self.leveltext.resize(100,30)
+        self.leveltext.move(1000,233)
+        self.leveltext.setText("Normal")
+        
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
         #self.descLabel.resize(50, 30)
@@ -85,6 +104,19 @@ class driveSheet(sheet):
         self.changevolume.addWidget(self.checkbutton)
         
         self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
+
+ #通知画像表示
+        self.noticeLabel = QLabel(self)
+        self.noticeLabel.move(700,250)
+        self.pmap = QPixmap("man.png")
+        self.noticeLabel.setPixmap(self.pmap)
+        
+        #判定レベル、状態画像表示に関する変数初期化
+        self.picturechange = 0
+        self.level = 2
+        self.count = 50
+        self.multi = 2
+        
 
         # deb:再設定
         self.b = QPushButton("再設定", self)
@@ -161,16 +193,42 @@ class driveSheet(sheet):
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
 
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
-            self.check = (self.check + 1)%51    # カウント
-            self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
-            if self.check == 50: # 50カウント後
+            
+            #判定レベルに関する変数代入
+            self.levelcheck()
+            if(self.level == 1):
+                self.count = 100
+                self.multi = 1
+            elif(self.level == 2):
+                self.count = 50
+                self.multi = 2
+            elif(self.level == 3):
+                self.count = 25
+                self.multi = 4
+            
+            
+            #一定時間で元の姿勢画像に戻す
+            self.picturechange = self.picturechange + 1
+            if self.picturechange == 10:
+                print("change!!")
+                self.pmap = QPixmap("man.png")
+                self.noticeLabel.setPixmap(self.pmap)
+            
+            self.check = (self.check + 1)%(self.count + 1)    # カウント
+            self.nekoze_pbar.setValue(self.check*self.multi) #checkを猫背ゲージに代入
+            if self.check == self.count: # 50カウント後
+                self.pmap = QPixmap("nekoze.png")
+                self.noticeLabel.setPixmap(self.pmap)
+                self.picturechange = 0
                 self.notice()       # 通知
                 self.time_draw()    # ログ追加
+                self.check = 0
+                self.nekoze_pbar.setValue(self.check * self.multi)
                 
         else:
             if self.check > 0:            
                 self.check = self.check - 1
-                self.nekoze_pbar.setValue(self.check*2) #checkを猫背ゲージに代入
+                self.nekoze_pbar.setValue(self.check*self.multi) #checkを猫背ゲージに代入
 
     def notice(self):
         if(self.noticeEnable.isChecked() ): # 通知をする場合
@@ -178,6 +236,21 @@ class driveSheet(sheet):
             # その他通知(あれば)
             if(self.message_boxEnable.isChecked() ): # 通知をする場合
                 self.message_box()
+    
+    #判定レベル設定
+    def levelcheck(self):
+        if(self.noticeEnable.isChecked() ):
+            self.level = 2
+            if(self.level1.isChecked()):
+                self.level = 1
+                self.leveltext.setText("Easy")
+            elif(self.level2.isChecked()):
+                self.level = 2
+                self.leveltext.setText("Normal")
+            elif(self.level3.isChecked()):
+                self.level = 3
+                self.leveltext.setText("Hard")
+    
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
@@ -190,7 +263,7 @@ class driveSheet(sheet):
         ev = abs( (s1 - s0) / s0 * 100 )
         
         # 出力
-        print(ev)
+        #print(ev)
         
         # 判定
         return ev > th
