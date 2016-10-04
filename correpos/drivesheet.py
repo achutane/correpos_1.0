@@ -52,22 +52,22 @@ class driveSheet(sheet):
         
         #判定厳しさ調整のラジオボタン作成
         self.sldlevel = QLabel(self)
-        self.sldlevel.move(650,240)
-        self.sldlevel.setText("判定level")
-        self.level1=QRadioButton("Easy", self)    #判定レベル　ラジオボタン作成
-        self.level1.move(730,240)
-        self.level2=QRadioButton("Normal", self)
+        self.sldlevel.move(610,240)
+        self.sldlevel.setText("ゲージ増加レベル:")
+        self.level1=QRadioButton("すこし", self)    #判定レベル　ラジオボタン作成
+        self.level1.move(750,240)
+        self.level2=QRadioButton("ふつう", self)
         self.level2.move(800,240)
-        self.level3=QRadioButton("Hard", self)
-        self.level3.move(890,240)
+        self.level3=QRadioButton("おおい", self)
+        self.level3.move(850,240)
         self.levelgroup=QButtonGroup(self)    #ラジオボタン　グループ作成
         self.levelgroup.addButton(self.level1)
         self.levelgroup.addButton(self.level2)
         self.levelgroup.addButton(self.level3)
         self.leveltext = QLabel(self)
-        self.leveltext.resize(100,30)
-        self.leveltext.move(1000,233)
-        self.leveltext.setText("Normal")
+        self.leveltext.resize(50,30)
+        self.leveltext.move(700,233)
+        self.leveltext.setText("ふつう")
         
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
@@ -191,11 +191,10 @@ class driveSheet(sheet):
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
-
+        self.levelcheck()
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
             
             #判定レベルに関する変数代入
-            self.levelcheck()
             if(self.level == 1):
                 self.count = 100
                 self.multi = 1
@@ -242,14 +241,14 @@ class driveSheet(sheet):
         if(self.noticeEnable.isChecked() ):
             self.level = 2
             if(self.level1.isChecked()):
+                self.leveltext.setText("すこし")
                 self.level = 1
-                self.leveltext.setText("Easy")
             elif(self.level2.isChecked()):
+                self.leveltext.setText("ふつう")
                 self.level = 2
-                self.leveltext.setText("Normal")
             elif(self.level3.isChecked()):
+                self.leveltext.setText("おおい")
                 self.level = 3
-                self.leveltext.setText("Hard")
     
     
     # 猫背評価
