@@ -15,6 +15,8 @@ import tkinter # ポップアップ表示に必要
 import tkinter.messagebox as tkmsg # ポップアップ表示に必要
 from os.path import join, relpath
 from glob import glob
+import copy
+
 
 # --- 定数 ---
 IMG_SIZE = (400, 300)
@@ -40,6 +42,13 @@ class driveSheet(sheet):
         self.nekozegauge_text.setGeometry(50,360,70,30)
         self.nekoze_pbar = QProgressBar(self)  #ゲージ本体
         self.nekoze_pbar.setGeometry(120,370,200,10)
+        self.nekozecondition_text=QLabel(self) #猫背状態の通知
+        self.nekozecondition_text.setText("状態：")
+        self.nekozecondition_text.setGeometry(345,360,70,30)
+        self.nekozecondition_settext=QLabel(self) #猫背状態の通知
+        self.nekozecondition_settext.setText("背筋ピーン")
+        self.nekozecondition_settext.setGeometry(375,360,70,30)
+        
         
         self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
         self.noticeEnable.move(700, 50)
@@ -81,28 +90,21 @@ class driveSheet(sheet):
             self.combo_selectSE.addItem(file)
         self.selectSE=list[0] #select_SEに文字列を代入　後でwavplayで使用
         self.combo_selectSE.activated[str].connect(self.selectSE_onActivated) #ComboBoxで選んだ時の動作
-     
-        
         
         self.w=QWidget(self) #音量設定の枠wの作成
         self.w.setGeometry(650,100,300,100) #音量設定の枠の座標 (y,x,width,height)     
-
         self.slider = QSlider(Qt.Vertical)  #スライダの向き
         self.slider.setRange(0, 100)  # スライダの範囲
         self.slider.setValue(50)  # 初期値
         self.slider_label = QLabel('Volume :'+str(self.slider.value())) #volume:スライダの値
-
-        self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行
-                
+        self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行                
         self.checkbutton = QPushButton("音量テスト") #音量の確認ボタン
         self.checkbutton.setFocusPolicy(Qt.NoFocus)
-        self.checkbutton.clicked.connect(self.button_clicked) #音量テストのボタンを押すとbutton_clicked実行
-        
+        self.checkbutton.clicked.connect(self.button_clicked) #音量テストのボタンを押すとbutton_clicked実行        
         self.changevolume=QHBoxLayout(self) #音量テストをまとめる横方向のレイアウトの作成
         self.changevolume.addWidget(self.slider_label)
         self.changevolume.addWidget(self.slider)
         self.changevolume.addWidget(self.checkbutton)
-        
         self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
 
  #通知画像表示
@@ -174,6 +176,8 @@ class driveSheet(sheet):
         if(len(facerect) > 0):	# 顔検出した 
             # サイズ取り出し
             # 顔選択:とりあえず面積最大
+            x0=facerect[0][0]
+            y0=facerect[0][1]
             w0 = facerect[0][2]    # 幅
             h0 = facerect[0][3]    # 高さ
             s0 = w0 * h0
@@ -185,9 +189,13 @@ class driveSheet(sheet):
                     w0 = w1     # 更新
                     h0 = h1
                     s0 = s1
+                    x0=facerect[i][0]
+                    y0=facerect[i][1]
             # サイズ確定
             self.width = w0
             self.height = h0
+            self.face_x=x0
+            self.face_y=y0
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
@@ -253,6 +261,8 @@ class driveSheet(sheet):
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
+        
+        
 
         s1 = w1 * h1	# 現在の面積
         s0 = w0 * h0	# 基準の面積
@@ -265,7 +275,20 @@ class driveSheet(sheet):
         #print(ev)
         
         # 判定
-        return ev > th
+        if ev >th: #顔の距離
+            if s1-s0>0:
+                self.nekozecondition_settext.setText("画面に近い")
+                return 1
+            else:
+                self.nekozecondition_settext.setText("画面から遠い")
+                return 0
+        elif self.face_y>config.face_y+config.height_s*0.3: #顔のｙ座標（たて）のチェック 顔の高さの0.3倍で検知
+            self.nekozecondition_settext.setText("顔が下がってる")
+            return 1
+        else:
+            self.nekozecondition_settext.setText("背筋ピーン")
+            return 0
+        #return ev > th
         
     def paintEvent(self, event):
         if not(self.cvCap is None):

@@ -108,9 +108,12 @@ class initSheet(sheet):
         
         print(facerect) # 認識結果出力
         
+        
         if(len(facerect) > 0):	# 顔検出した
             # サイズ取り出し
             # 顔選択:とりあえず面積最大
+            x0=facerect[0][0]   #ｘ：縦
+            y0=facerect[0][1]   #ｙ：横
             w0 = facerect[0][2]    # 幅
             h0 = facerect[0][3]    # 高さ
             s0 = w0 * h0
@@ -122,9 +125,14 @@ class initSheet(sheet):
                     w0 = w1     # 更新
                     h0 = h1
                     s0 = s1
+                    x0=facerect[i][0]
+                    y0=facerect[i][1]
             # サイズ確定
             config.width_s = w0
             config.height_s = h0
+            config.face_x=x0
+            config.face_y=y0
+            
             print((config.width_s, config.height_s))	# サイズ出力
             
         	# テキスト変更
@@ -136,7 +144,7 @@ class initSheet(sheet):
             
         else:	# 顔検出せず
             self.capButton.setText(TXT_CAP)   # テキスト変更
-            self.descLabel.setText(TXT_DESC3)	# エラーメッセージ
+            #self.descLabel.setText(TXT_DESC3)	# エラーメッセージ
             self.nextButton.setEnabled(False)	# [次へ]無効
         
         # カメラ映像キャプチャ
@@ -167,8 +175,8 @@ class initSheet(sheet):
             color = (255, 255, 255) # 白
             for rect in facerect:
                 #検出した顔を囲む矩形の作成
+                
                 cv2.rectangle(frame, tuple(rect[0:2]),tuple(rect[0:2] + rect[2:4]), color, thickness=2)
-
             
             frame2 = cv2.resize(frame, IMG_SIZE )		# リサイズ
             frame2 = frame2[:,::-1]							# 左右反転
@@ -177,4 +185,5 @@ class initSheet(sheet):
             img = QImage(frame.data, frame.shape[1], frame.shape[0], QImage.Format_RGB888)    # QImage生成
             pix = QPixmap.fromImage(img)            # QPixmap生成
             self.videoLabel.setPixmap(pix)            # 画像貼り付け
+
 
