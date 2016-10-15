@@ -243,6 +243,7 @@ class driveSheet(sheet):
             # その他通知(あれば)
             if(self.message_boxEnable.isChecked() ): # 通知をする場合
                 self.message_box()
+                self.balloon()
     
     #判定レベル設定
     def levelcheck(self):
@@ -316,6 +317,11 @@ class driveSheet(sheet):
         root.withdraw() # <- これでTkの小さいウィンドウが非常時になる
         tkmsg.showwarning('correpos', '猫背検知！！')
         # 参考URL http://ameblo.jp/hitochan007/entry-12028166427.html
+
+    def balloon(self):
+        icon = QSystemTrayIcon.MessageIcon(1)
+        tray = QSystemTrayIcon(ui)
+        tray.show()
         
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
