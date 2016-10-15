@@ -3,7 +3,6 @@
 
 from sheet import sheet
 import config
-import sys
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
