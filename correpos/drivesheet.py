@@ -339,6 +339,15 @@ class driveSheet(sheet):
           
           # 終了時刻になった
           if(currentTime == workTime):
-              print("作業終了！")
+              str = "作業終了！"
+              print(str)
+              
+              # 終了通知
+              self.dlg = QMessageBox(self)
+              self.dlg.setText(str)
+              self.dlg.setWindowTitle("CorrePos")
+              self.dlg.show()
+              self.activateWindow()
+              
               self.workHourButton.setChecked(False)
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
