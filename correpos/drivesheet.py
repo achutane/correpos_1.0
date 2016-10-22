@@ -119,6 +119,14 @@ class driveSheet(sheet):
         self.count = 50
         self.multi = 2
         
+        # 作業終了時刻の設定
+        self.workHourButton = QCheckBox(self)                      # 有効・無効設定
+        self.workHourButton.setText("作業終了時刻を設定する：")
+        self.workHourButton.move(650, 200)
+        self.workHourButton.setTristate(False)
+        self.workHourEdit = QDateTimeEdit(self)                    # 時刻設定
+        self.workHourEdit.move(800, 200)
+        self.workHourEdit.setDisplayFormat("hh:mm")
 
         # deb:再設定
         self.b = QPushButton("再設定", self)
@@ -166,6 +174,7 @@ class driveSheet(sheet):
         self.nekose_check()
         self.timer.setInterval(10)
         self.timer.start()
+        self.checkWorkHour()
         
         #猫背をチェックする
     def nekose_check(self):
@@ -327,3 +336,25 @@ class driveSheet(sheet):
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
         wavplay_pygame.play(text,self.slider.value()) #音を鳴ら
+        
+    # 作業終了時刻
+    def checkWorkHour(self):
+        # 設定が有効
+        if(self.workHourButton.isChecked() ):
+          currentTime = QDateTime.currentDateTime().time().toString("hh:mm")
+          workTime = self.workHourEdit.time().toString("hh:mm")
+          
+          # 終了時刻になった
+          if(currentTime == workTime):
+              str = "作業終了！"
+              print(str)
+              
+              # 終了通知
+              self.dlg = QMessageBox(self)
+              self.dlg.setText(str)
+              self.dlg.setWindowTitle("CorrePos")
+              self.dlg.show()
+              self.activateWindow()
+              
+              self.workHourButton.setChecked(False)
+              self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
