@@ -242,7 +242,7 @@ class driveSheet(sheet):
             wavplay_pygame.play(self.selectSE,self.slider.value()) #選択したSEを鳴らす
             # その他通知(あれば)
             if(self.message_boxEnable.isChecked() ): # 通知をする場合
-                self.message_box()
+                self.balloon()
     
     #判定レベル設定
     def levelcheck(self):
@@ -310,13 +310,20 @@ class driveSheet(sheet):
         if button is None or not isinstance(button,QPushButton):
             return
         wavplay_pygame.play(self.selectSE,self.slider.value())
-    
-    def message_box(self): # ポップアップ表示
-        root = tkinter.Tk()
-        root.withdraw() # <- これでTkの小さいウィンドウが非常時になる
-        tkmsg.showwarning('correpos', '猫背検知！！')
-        # 参考URL http://ameblo.jp/hitochan007/entry-12028166427.html
-        
+
+    def message_box(self): # ポップアップ表示 message  使わないけど一応残しとくmessage
+        QMessageBox.warning(self, "CorrePos", u"猫背検知！！")
+        self.show()
+        # 参考URL http://myenigma.hatenablog.com/entry/2016/01/24/113413#メッセージボックスを作る
+
+    def balloon(self): # バルーン表示
+        self.trayIcon = QSystemTrayIcon(self)
+        icon = QSystemTrayIcon.MessageIcon(2) # 引数によりアイコンが変わる
+        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
+        self.trayIcon.show()
+        self.trayIcon.showMessage("CorrePos","猫背検知！！",icon,5000) # 最後の引数は自動消失までの時間(ms)．
+        # 参考URL http://kyoui3350.blog96.fc2.com/blog-entry-344.html
+
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
         wavplay_pygame.play(text,self.slider.value()) #音を鳴ら
