@@ -11,8 +11,6 @@ from PyQt5.QtGui import *
 import datetime
 import cv2
 import wavplay_pygame
-import tkinter # ポップアップ表示に必要
-import tkinter.messagebox as tkmsg # ポップアップ表示に必要
 from os.path import join, relpath
 from glob import glob
 import copy
@@ -131,6 +129,11 @@ class driveSheet(sheet):
         # deb:再設定
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
+
+        # バルーンのためのアイコン（右下に常駐）
+        self.trayIcon = QSystemTrayIcon(self)
+        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
+        self.trayIcon.show()
         
     def on_clicked(self):
         print("clicked @ sheet2")
@@ -161,6 +164,12 @@ class driveSheet(sheet):
         d = datetime.datetime.today()
         daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
         self.text.append(daystr+"猫背を検知！")      
+
+    # time_drawを汎用化した
+    def write_log(self, log):
+        d = datetime.datetime.today()
+        daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
+        self.text.append(daystr+log) 
         
         #タイマーの起動
     def auto(self):
@@ -326,12 +335,10 @@ class driveSheet(sheet):
         # 参考URL http://myenigma.hatenablog.com/entry/2016/01/24/113413#メッセージボックスを作る
 
     def balloon(self): # バルーン表示
-        self.trayIcon = QSystemTrayIcon(self)
         icon = QSystemTrayIcon.MessageIcon(2) # 引数によりアイコンが変わる
-        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
-        self.trayIcon.show()
-        self.trayIcon.showMessage("CorrePos","猫背検知！！",icon,5000) # 最後の引数は自動消失までの時間(ms)．
+        self.trayIcon.showMessage("CorrePos","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
         # 参考URL http://kyoui3350.blog96.fc2.com/blog-entry-344.html
+        # http://pyqt.sourceforge.net/Docs/PyQt4/qsystemtrayicon.html
 
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
@@ -358,3 +365,5 @@ class driveSheet(sheet):
               
               self.workHourButton.setChecked(False)
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
+
+              self.write_log(str)
