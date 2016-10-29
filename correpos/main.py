@@ -8,6 +8,7 @@ from PyQt5.QtGui import *
 
 from initsheet import initSheet
 from drivesheet import driveSheet
+from logsheet import logSheet
 
 # --- 定数 ---
 
@@ -34,6 +35,7 @@ class myWindow(QWidget):
         self.sheets = []
         self.sheets.append(initSheet(self) )
         self.sheets.append(driveSheet(self) )
+        self.sheets.append(logSheet(self) )
         
         self.current = 0
         self.sheets[self.current].start()
