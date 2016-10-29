@@ -14,7 +14,7 @@ from drivesheet import driveSheet
 APPNAME = "CORREPOS"
 VERSION = "0.0.1"
 
-#WINDOW_SIZE = (1200, 600)
+WINDOW_SIZE = (1200, 600)
 
 # --- ウィンドウ ---
 class myWindow(QWidget):
@@ -29,37 +29,37 @@ class myWindow(QWidget):
 #        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
 #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
+
         # シート作成
         self.sheets = []
-        self.sheets.append(initSheet)	# クラスを登録
-        self.sheets.append(driveSheet)
+        self.sheets.append(initSheet(self) )
+        self.sheets.append(driveSheet(self) )
         
-        self.sheet = self.sheets[0](self)	# 登録したクラスから1つ選んでインスタンス化
-        self.sheet.start()
+        self.current = 0
+        self.sheets[self.current].start()
         
         # ウィンドウ表示
         self.show()
-        self.setFixedSize(self.width(), self.height() )		# サイズ固定
+        self.setFixedSize( self.width(), self.height() )	# サイズ固定
         
     # シート切り替え
     def setSheet(self, num):
-        self.sheet.stop()	# 終了
-        self.sheet = self.sheets[num](self)	# インスタンス化
-        self.sheet.start()	# 開始
+        self.sheets[self.current].stop()
+        self.current = num
+        self.sheets[self.current].start()
+        self.repaint()
         
-        # ウィンドウ調整
         g0 = self.frameGeometry()
         
-        self.setMinimumSize(0,0)
-        self.setMaximumSize(10000,10000)
+        self.setMinimumSize(0,0)			# サイズ可変化
+        self.setMaximumSize(10000,10000)	#
         self.adjustSize()									# サイズ調整
-        self.setFixedSize(self.width(), self.height())		# サイズ固定
-        # 位置調整
-        g1 = self.frameGeometry()
-        x = max(0, g1.x() - (g1.width()-g0.width())/2 )
-        y = max(0, g1.y() - (g1.height()-g0.height())/2 )
-        self.move(x, y)
+        self.setFixedSize( self.width(), self.height() )	# サイズ固定
         
+        g1 = self.frameGeometry()
+        x = max(0, g1.x() - (g1.width() - g0.width() ) /2 )
+        y = max(0, g1.y() - (g1.height() - g0.height() ) /2 )
+        self.move(x, y)
 
 # --- メイン処理 ---
 def main():
