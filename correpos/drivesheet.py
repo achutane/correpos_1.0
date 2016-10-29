@@ -16,6 +16,8 @@ import tkinter.messagebox as tkmsg # ポップアップ表示に必要
 from os.path import join, relpath
 from glob import glob
 import copy
+import pandas as pd
+import os.path
 
 
 # --- 定数 ---
@@ -131,6 +133,14 @@ class driveSheet(sheet):
         # deb:再設定
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
+
+
+        self.logbutton = QPushButton("log",self)
+        self.logbutton.clicked.connect(self.on_clicked_log)
+        self.logbutton.move(50,550)
+        
+    def on_clicked_log(self):
+        self.parent.setSheet(2)   
         
     def on_clicked(self):
         print("clicked @ sheet2")
@@ -160,7 +170,19 @@ class driveSheet(sheet):
     def time_draw(self):
         d = datetime.datetime.today()
         daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
-        self.text.append(daystr+"猫背を検知！")      
+        self.text.append(daystr+"猫背を検知！")
+        self.add_log()
+
+    def add_log(self):
+        if os.path.exists("log.csv"):
+            df = pd.read_csv('log.csv')
+            df = df['0']
+            df = df.append(pd.DataFrame([datetime.datetime.today()]))
+            
+        else:
+            df = pd.DataFrame([datetime.datetime.today()])
+
+        df.to_csv('log.csv')
         
         #タイマーの起動
     def auto(self):
