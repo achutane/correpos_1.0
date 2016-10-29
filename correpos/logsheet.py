@@ -14,7 +14,6 @@ import wave
 import cv2
 import math
 import copy
-import pymysql.cursors
 
 import matplotlib
 from matplotlib.figure import Figure
