@@ -26,8 +26,9 @@ class myWindow(QWidget):
     def initUI(self):
         # ウィンドウ設定
         self.setWindowTitle(APPNAME)                        # キャプション
-        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
- #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
+#        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
+#       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
+
 
         # シート作成
         self.sheets = []
@@ -39,13 +40,28 @@ class myWindow(QWidget):
         
         # ウィンドウ表示
         self.show()
+        self.setFixedSize( self.width(), self.height() )	# サイズ固定
         
     # シート切り替え
     def setSheet(self, num):
         self.sheets[self.current].stop()
         self.current = num
         self.sheets[self.current].start()
-            
+        self.repaint()
+        
+        g0 = self.frameGeometry()
+        
+        self.setMinimumSize(0,0)			# サイズ可変化
+        self.setMaximumSize(10000,10000)	#
+        self.adjustSize()									# サイズ調整
+        self.setFixedSize( self.width(), self.height() )	# サイズ固定
+        
+        g1 = self.frameGeometry()
+        # サイズ調整の前後で中心位置を合わせる, ただしウィンドウ左上が画面に収まるようにする
+        # ** マルチ画面環境だと変になる可能性 **
+        x = max(0, g1.x() - (g1.width() - g0.width() ) /2 )
+        y = max(0, g1.y() - (g1.height() - g0.height() ) /2 )
+        self.move(x, y)
 
 # --- メイン処理 ---
 def main():

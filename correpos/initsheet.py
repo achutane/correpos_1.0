@@ -12,7 +12,7 @@ import cv2
 import copy
 
 # --- 定数 ---
-BUTTON_SIZE = (100, 23)    # フォント23
+BUTTON_SIZE = (150, 40)    # フォント23
 BUTTON_CAP_POS = (250, 489)
 BUTTON_NEXT_POS = (600 + BUTTON_CAP_POS[0], BUTTON_CAP_POS[1] )
 
@@ -45,33 +45,53 @@ class initSheet(sheet):
         # 撮影ボタン
         self.capButton = QPushButton(TXT_CAP, self)                    # 生成、キャプション
         self.capButton.clicked.connect(self.on_clicked_cap)            # クリック時の動作
-        self.capButton.resize(BUTTON_SIZE[0], BUTTON_SIZE[1] )        # サイズ設定
-        self.capButton.move(BUTTON_CAP_POS[0], BUTTON_CAP_POS[1])    # 位置
+        self.capButton.setFixedSize(BUTTON_SIZE[0], BUTTON_SIZE[1] )        # サイズ設定
+#        self.capButton.move(BUTTON_CAP_POS[0], BUTTON_CAP_POS[1])    # 位置
         
         # Nextボタン
         self.nextButton = QPushButton(TXT_NEXT, self)                    # 生成
         self.nextButton.clicked.connect(self.on_clicked_next)            # クリック時
-        self.nextButton.resize(BUTTON_SIZE[0], BUTTON_SIZE[1] )                # サイズ
-        self.nextButton.move(BUTTON_NEXT_POS[0], BUTTON_NEXT_POS[1])    # 配置
+        self.nextButton.setFixedSize(BUTTON_SIZE[0], BUTTON_SIZE[1] )                # サイズ
+#        self.nextButton.move(BUTTON_NEXT_POS[0], BUTTON_NEXT_POS[1])    # 配置
         self.nextButton.setEnabled(False)                                # 無効化
 
         # --- ラベル配置 ---
         self.descLabel = QLabel(self)
-        self.descLabel.move(100, 50)
-        self.descLabel.resize(1100, 30)
+#        self.descLabel.move(100, 50)
+#        self.descLabel.resize(1100, 30)
         
         # --- 画像配置 ---
         # 映像表示
         self.videoLabel = QLabel(self)
-        self.videoLabel.resize(IMG_SIZE[0], IMG_SIZE[1])
-        self.videoLabel.move(IMG1_POS[0], IMG1_POS[1])
+        self.videoLabel.setFixedSize(IMG_SIZE[0], IMG_SIZE[1])
+#        self.videoLabel.move(IMG1_POS[0], IMG1_POS[1])
         
         # スクショ表示
         self.capLabel = QLabel(self)
-        self.capLabel.move(IMG2_POS[0], IMG2_POS[1])
-        self.capLabel.resize(IMG_SIZE[0], IMG_SIZE[1])
+#        self.capLabel.move(IMG2_POS[0], IMG2_POS[1])
+        self.capLabel.setFixedSize(IMG_SIZE[0], IMG_SIZE[1])
         
         self.cvCap = None
+        
+        # 配置
+        self.move(32, 16)
+        vbox = QVBoxLayout()
+        vbox.setSpacing(16)
+        vbox.addWidget( self.descLabel )
+        
+        h1 = QHBoxLayout()
+        h1.setSpacing(32)
+        h1.addWidget( self.videoLabel, 0, Qt.AlignCenter )
+        h1.addWidget( self.capLabel, 0, Qt.AlignCenter )
+        vbox.addLayout(h1)
+        
+        h1 = QHBoxLayout()
+        h1.setSpacing(32)
+        h1.addWidget( self.capButton, 0, Qt.AlignCenter )
+        h1.addWidget( self.nextButton, 0, Qt.AlignCenter )
+        vbox.addLayout(h1)
+        
+        self.setLayout(vbox)
         
     # 動作開始
     def start(self):
