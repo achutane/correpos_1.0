@@ -28,6 +28,7 @@ cascade = cv2.CascadeClassifier(cascade_path)
 class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
+        self.resize(1200, 600)
         
         self.text = QTextEdit(self)		# ログ枠
         self.text.move(50,400)
