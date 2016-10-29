@@ -134,7 +134,12 @@ class driveSheet(sheet):
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
 
+        # バルーンのためのアイコン（右下に常駐）
+        self.trayIcon = QSystemTrayIcon(self)
+        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
+        self.trayIcon.show()
 
+        # ログボタン
         self.logbutton = QPushButton("log",self)
         self.logbutton.clicked.connect(self.on_clicked_log)
         self.logbutton.move(50,550)
