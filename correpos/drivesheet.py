@@ -11,8 +11,6 @@ from PyQt5.QtGui import *
 import datetime
 import cv2
 import wavplay_pygame
-import tkinter # ポップアップ表示に必要
-import tkinter.messagebox as tkmsg # ポップアップ表示に必要
 from os.path import join, relpath
 from glob import glob
 import copy
@@ -33,10 +31,10 @@ class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
-        self.text = QTextEdit(self)		# ログ枠
+        self.text = QTextEdit(self)     # ログ枠
         self.text.move(50,400)
         self.text.resize(400,150)
-        self.videoLabel = QLabel(self)	# 映像表示
+        self.videoLabel = QLabel(self)  # 映像表示
         self.videoLabel.resize(400,300)        
         self.videoLabel.move(50,50)
         self.nekozegauge_text=QLabel(self) #猫背ゲージの作成
@@ -52,11 +50,11 @@ class driveSheet(sheet):
         self.nekozecondition_settext.setGeometry(375,360,70,30)
         
         
-        self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
+        self.noticeEnable = QCheckBox(self) # 通知オン・オフ
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
         self.noticeEnable.setTristate(False)
-        self.message_boxEnable = QCheckBox(self)	# ポップアップ通知オン・オフ
+        self.message_boxEnable = QCheckBox(self)    # ポップアップ通知オン・オフ
         self.message_boxEnable.move(800, 50)
         self.message_boxEnable.setText("ポップアップ通知")
         self.message_boxEnable.setTristate(False)
@@ -139,13 +137,12 @@ class driveSheet(sheet):
         self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
         self.trayIcon.show()
 
-        # ログボタン
         self.logbutton = QPushButton("log",self)
         self.logbutton.clicked.connect(self.on_clicked_log)
         self.logbutton.move(50,550)
         
     def on_clicked_log(self):
-        self.parent.setSheet(2)   
+        self.parent.setSheet(2)
         
     def on_clicked(self):
         print("clicked @ sheet2")
@@ -175,7 +172,7 @@ class driveSheet(sheet):
     def time_draw(self):
         d = datetime.datetime.today()
         daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
-        self.text.append(daystr+"猫背を検知！")
+        self.text.append(daystr+"猫背を検知！")    
         self.add_log()
 
     def add_log(self):
@@ -187,7 +184,13 @@ class driveSheet(sheet):
         else:
             df = pd.DataFrame([datetime.datetime.today()])
 
-        df.to_csv('log.csv')
+        df.to_csv('log.csv')  
+
+    # time_drawを汎用化した
+    def write_log(self, log):
+        d = datetime.datetime.today()
+        daystr=d.strftime("%Y-%m-%d %H:%M:%S")        
+        self.text.append(daystr+log) 
         
         #タイマーの起動
     def auto(self):
@@ -209,7 +212,7 @@ class driveSheet(sheet):
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
         print(facerect)
         
-        if(len(facerect) > 0):	# 顔検出した 
+        if(len(facerect) > 0):  # 顔検出した 
             # サイズ取り出し
             # 顔選択:とりあえず面積最大
             x0=facerect[0][0]
@@ -300,9 +303,9 @@ class driveSheet(sheet):
         
         
 
-        s1 = w1 * h1	# 現在の面積
-        s0 = w0 * h0	# 基準の面積
-        th = 35			# 閾値
+        s1 = w1 * h1    # 現在の面積
+        s0 = w0 * h0    # 基準の面積
+        th = 35         # 閾値
         
         # 評価
         ev = abs( (s1 - s0) / s0 * 100 )
@@ -353,12 +356,10 @@ class driveSheet(sheet):
         # 参考URL http://myenigma.hatenablog.com/entry/2016/01/24/113413#メッセージボックスを作る
 
     def balloon(self): # バルーン表示
-        self.trayIcon = QSystemTrayIcon(self)
         icon = QSystemTrayIcon.MessageIcon(2) # 引数によりアイコンが変わる
-        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
-        self.trayIcon.show()
-        self.trayIcon.showMessage("CorrePos","猫背検知！！",icon,5000) # 最後の引数は自動消失までの時間(ms)．
+        self.trayIcon.showMessage("CorrePos","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
         # 参考URL http://kyoui3350.blog96.fc2.com/blog-entry-344.html
+        # http://pyqt.sourceforge.net/Docs/PyQt4/qsystemtrayicon.html
 
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
@@ -385,3 +386,5 @@ class driveSheet(sheet):
               
               self.workHourButton.setChecked(False)
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
+
+              self.write_log(str)
