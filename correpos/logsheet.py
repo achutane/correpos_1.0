@@ -17,9 +17,10 @@ import copy
 
 import matplotlib
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 matplotlib.use("Qt5Agg")
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 import pandas as pd
 
