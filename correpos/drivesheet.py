@@ -153,6 +153,7 @@ class driveSheet(sheet):
         self.auto()
         self.cvCap = cv2.VideoCapture(0)
         self.check = 1
+        self.face = False   #顔が認識されている場合True
         
         self.noticeEnable.setChecked(True)
         self.message_boxEnable.setChecked(True)
@@ -211,7 +212,8 @@ class driveSheet(sheet):
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
         print(facerect)
         
-        if(len(facerect) > 0):	# 顔検出した 
+        if(len(facerect) > 0):	# 顔検出した
+            self.face = True 
             # サイズ取り出し
             # 顔選択:とりあえず面積最大
             x0=facerect[0][0]
@@ -234,6 +236,9 @@ class driveSheet(sheet):
             self.height = h0
             self.face_x=x0
             self.face_y=y0
+
+        else:
+            self.face =False
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
@@ -258,8 +263,8 @@ class driveSheet(sheet):
                 print("change!!")
                 self.pmap = QPixmap("man.png")
                 self.noticeLabel.setPixmap(self.pmap)
-            
-            self.check = (self.check + 1)%(self.count + 1)    # カウント
+            if self.face: # 顔が認識されている場合
+                self.check = (self.check + 1)%(self.count + 1)    # カウント
             self.nekoze_pbar.setValue(self.check*self.multi) #checkを猫背ゲージに代入
             if self.check == self.count: # 50カウント後
                 self.pmap = QPixmap("nekoze.png")
