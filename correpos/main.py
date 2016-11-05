@@ -65,6 +65,10 @@ class myWindow(QWidget):
         y = max(0, g1.y() - (g1.height() - g0.height() ) /2 )
         self.move(x, y)
 
+    def closeEvent(self, event):
+	    for s in self.sheets:
+	        s.close()
+
 # --- メイン処理 ---
 def main():
     app = QApplication(sys.argv)

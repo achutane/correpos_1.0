@@ -31,12 +31,14 @@ class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
+        self.subWindow = QWidget()
+        
         self.text = QTextEdit(self)		# ログ枠
         self.text.move(50,400)
         self.text.resize(400,150)
-        self.videoLabel = QLabel(self)	# 映像表示
+        self.videoLabel = QLabel(self.subWindow)	# 映像表示
         self.videoLabel.resize(400,300)        
-        self.videoLabel.move(50,50)
+#       self.videoLabel.move(50,50)
         self.nekozegauge_text=QLabel(self) #猫背ゲージの作成
         self.nekozegauge_text.setText("猫背ゲージ　")
         self.nekozegauge_text.setGeometry(50,360,70,30)
@@ -129,7 +131,8 @@ class driveSheet(sheet):
         self.workHourEdit.setDisplayFormat("hh:mm")
 
         # deb:再設定
-        self.b = QPushButton("再設定", self)
+        self.b = QPushButton("再設定", self.subWindow)
+        self.b.move(0, 300)
         self.b.clicked.connect(self.on_clicked)
 
         # バルーンのためのアイコン（右下に常駐）
@@ -156,7 +159,10 @@ class driveSheet(sheet):
         
         self.noticeEnable.setChecked(True)
         self.message_boxEnable.setChecked(True)
-
+        
+        self.subWindow.adjustSize()
+        self.subWindow.setFixedSize( self.subWindow.size() )
+        self.subWindow.show()
 
           
     def stop(self):
@@ -168,6 +174,7 @@ class driveSheet(sheet):
         # タイマー終了
         self.timer.stop()
         
+        self.subWindow.hide()
         
     def time_draw(self):
         d = datetime.datetime.today()
@@ -204,6 +211,8 @@ class driveSheet(sheet):
         self.timer.setInterval(10)
         self.timer.start()
         self.checkWorkHour()
+        self.subWindow.show()
+        self.update()
         
         #猫背をチェックする
     def nekose_check(self):
@@ -387,3 +396,7 @@ class driveSheet(sheet):
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
 
               self.write_log(str)
+
+    def closeEvent(self, event):
+        self.subWindow.close()
+        
