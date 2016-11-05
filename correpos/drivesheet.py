@@ -59,7 +59,7 @@ class driveSheet(sheet):
         self.message_boxEnable.setText("ポップアップ通知")
         self.message_boxEnable.setTristate(False)
         
-        #判定厳しさ調整のラジオボタン作成
+        #ゲージ増加調整のラジオボタン作成
         self.sldlevel = QLabel(self)
         self.sldlevel.move(610,240)
         self.sldlevel.setText("ゲージ増加レベル:")
@@ -78,9 +78,29 @@ class driveSheet(sheet):
         self.leveltext.move(700,233)
         self.leveltext.setText("ふつう")
         
+        #判定厳しさ調整のラジオボタン作成
+        self.checklevel = QLabel(self)
+        self.checklevel.move(610,260)
+        self.checklevel.setText("判定レベル:")
+        self.clevel1=QRadioButton("ゆるい", self)    #判定レベル　ラジオボタン作成
+        self.clevel1.move(750,260)
+        self.clevel2=QRadioButton("ふつう", self)
+        self.clevel2.move(800,260)
+        self.clevel3=QRadioButton("きびしい", self)
+        self.clevel3.move(850,260)
+        self.clevelgroup=QButtonGroup(self)    #ラジオボタン　グループ作成
+        self.clevelgroup.addButton(self.clevel1)
+        self.clevelgroup.addButton(self.clevel2)
+        self.clevelgroup.addButton(self.clevel3)
+        self.cleveltext = QLabel(self)
+        self.cleveltext.resize(50,30)
+        self.cleveltext.move(700,253)
+        self.cleveltext.setText("ふつう")
+        
+        
+        
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
-        #self.descLabel.resize(50, 30)
         self.descLabel.setText("通知音設定 ： ")
         self.combo_selectSE = QComboBox(self) #ComboBoxの作成
         self.combo_selectSE.move(750,75) #ComboBoxの座標指定
@@ -107,9 +127,9 @@ class driveSheet(sheet):
         self.changevolume.addWidget(self.checkbutton)
         self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
 
- #通知画像表示
+        #通知画像表示
         self.noticeLabel = QLabel(self)
-        self.noticeLabel.move(700,250)
+        self.noticeLabel.move(700,270)
         self.pmap = QPixmap("man.png")
         self.noticeLabel.setPixmap(self.pmap)
         
@@ -118,6 +138,8 @@ class driveSheet(sheet):
         self.level = 2
         self.count = 50
         self.multi = 2
+        self.th = 35       #顔の距離の閾値
+        self.multi_y = 0.3   #顔の上下の判定
         
         # 作業終了時刻の設定
         self.workHourButton = QCheckBox(self)                      # 有効・無効設定
@@ -238,6 +260,7 @@ class driveSheet(sheet):
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
         self.levelcheck()
+        self.facelevelcheck()
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
             
             #判定レベルに関する変数代入
@@ -295,7 +318,23 @@ class driveSheet(sheet):
             elif(self.level3.isChecked()):
                 self.leveltext.setText("おおい")
                 self.level = 3
-    
+                
+    def facelevelcheck(self):
+        if(self.clevel1.isChecked()):
+            self.cleveltext.setText("ゆるい")
+            self.multi_y = 0.5   #顔の上下の判定
+            self.th=50           #顔の距離の閾値
+
+        elif(self.clevel2.isChecked()):
+            self.cleveltext.setText("ふつう")
+            self.multi_y = 0.3   #顔の上下の判定
+            self.th=35           #顔の距離の閾値
+
+        elif(self.clevel3.isChecked()):
+            self.cleveltext.setText("きびしい")
+            self.multi_y = 0.2   #顔の上下の判定
+            self.th=35           #顔の距離の閾値
+
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
@@ -304,7 +343,7 @@ class driveSheet(sheet):
 
         s1 = w1 * h1	# 現在の面積
         s0 = w0 * h0	# 基準の面積
-        th = 35			# 閾値
+        #th = 35			# 閾値
         
         # 評価
         ev = abs( (s1 - s0) / s0 * 100 )
@@ -313,14 +352,14 @@ class driveSheet(sheet):
         #print(ev)
         
         # 判定
-        if ev >th: #顔の距離
+        if ev >self.th: #顔の距離
             if s1-s0>0:
                 self.nekozecondition_settext.setText("画面に近い")
                 return 1
             else:
                 self.nekozecondition_settext.setText("画面から遠い")
                 return 0
-        elif self.face_y>config.face_y+config.height_s*0.3: #顔のｙ座標（たて）のチェック 顔の高さの0.3倍で検知
+        elif self.face_y>config.face_y+config.height_s*self.multi_y: #顔のｙ座標（たて）のチェック 顔の高さの0.3倍で検知
             self.nekozecondition_settext.setText("顔が下がってる")
             return 1
         else:
