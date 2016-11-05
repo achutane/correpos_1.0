@@ -10,6 +10,8 @@ from initsheet import initSheet
 from drivesheet import driveSheet
 from logsheet import logSheet
 
+import config
+
 # --- 定数 ---
 
 APPNAME = "CORREPOS"
@@ -43,6 +45,11 @@ class myWindow(QWidget):
         # ウィンドウ表示
         self.show()
         self.setFixedSize( self.width(), self.height() )	# サイズ固定
+
+        # バルーンのためのアイコン（右下に常駐）
+        config.trayIcon = QSystemTrayIcon(self)
+        config.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
+        config.trayIcon.show()
         
     # シート切り替え
     def setSheet(self, num):
@@ -64,6 +71,12 @@ class myWindow(QWidget):
         x = max(0, g1.x() - (g1.width() - g0.width() ) /2 )
         y = max(0, g1.y() - (g1.height() - g0.height() ) /2 )
         self.move(x, y)
+
+    # ウィンドウを閉じるとき発生するイベント
+    # 参考URL  http://17-m.seesaa.net/article/247521232.html
+    def closeEvent(self, event):
+        config.trayIcon.hide()
+
 
 # --- メイン処理 ---
 def main():

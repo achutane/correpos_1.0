@@ -132,11 +132,6 @@ class driveSheet(sheet):
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
 
-        # バルーンのためのアイコン（右下に常駐）
-        self.trayIcon = QSystemTrayIcon(self)
-        self.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
-        self.trayIcon.show()
-
         self.logbutton = QPushButton("log",self)
         self.logbutton.clicked.connect(self.on_clicked_log)
         self.logbutton.move(50,550)
@@ -356,7 +351,7 @@ class driveSheet(sheet):
 
     def balloon(self): # バルーン表示
         icon = QSystemTrayIcon.MessageIcon(2) # 引数によりアイコンが変わる
-        self.trayIcon.showMessage("CorrePos","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
+        config.trayIcon.showMessage("CorrePos","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
         # 参考URL http://kyoui3350.blog96.fc2.com/blog-entry-344.html
         # http://pyqt.sourceforge.net/Docs/PyQt4/qsystemtrayicon.html
 
