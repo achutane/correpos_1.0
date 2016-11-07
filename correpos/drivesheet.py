@@ -319,10 +319,7 @@ class driveSheet(sheet):
         #print(ev)
         
         # 判定
-        if self.face==False:            
-            self.nekozecondition_settext.setText("顔みつからない")
-            return 1
-        elif ev >th: #顔の距離
+        if ev >th: #顔の距離
             if s1-s0>0:
                 self.nekozecondition_settext.setText("画面に近い")
                 return 1
