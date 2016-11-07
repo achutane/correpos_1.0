@@ -6,3 +6,4 @@ face_y=0 #顔の座標ｙ（縦軸）
 width_s = 0
 height_s = 0
 
+trayIcon=0
