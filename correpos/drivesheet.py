@@ -239,6 +239,7 @@ class driveSheet(sheet):
 
         else:
             self.face =False
+
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
@@ -318,7 +319,10 @@ class driveSheet(sheet):
         #print(ev)
         
         # 判定
-        if ev >th: #顔の距離
+        if self.face==False:            
+            self.nekozecondition_settext.setText("顔みつからない")
+            return 1
+        elif ev >th: #顔の距離
             if s1-s0>0:
                 self.nekozecondition_settext.setText("画面に近い")
                 return 1
