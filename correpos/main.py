@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+from titlesheet import titleSheet
 from initsheet import initSheet
 from drivesheet import driveSheet
 from logsheet import logSheet
@@ -38,8 +39,9 @@ class myWindow(QWidget):
         self.sheets.append(initSheet(self) )
         self.sheets.append(driveSheet(self) )
         self.sheets.append(logSheet(self) )
-        
-        self.current = 0
+        self.sheets.append(titleSheet(self) )
+
+        self.current = 3
         self.sheets[self.current].start()
         
         # ウィンドウ表示
