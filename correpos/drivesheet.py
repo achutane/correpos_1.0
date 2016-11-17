@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+import log 
 import datetime
 import cv2
 import wavplay_pygame
@@ -157,16 +158,23 @@ class driveSheet(sheet):
         self.logbutton = QPushButton("log",self)
         self.logbutton.clicked.connect(self.on_clicked_log)
         self.logbutton.move(50,550)
-        
+
     def on_clicked_log(self):
-        self.parent.setSheet(2)
+        log.LOG()
+
+    def start_log(self):
+        d = datetime.datetime.today()
+        daystr=d.strftime("%Y-%m-%d %H:%M:%S") 
+        self.text.append(daystr+"  START!!!")
         
+
     def on_clicked(self):
         print("clicked @ sheet2")
         self.parent.setSheet(0)
   
     def start(self):
         super().start()
+        self.start_log()
         self.auto()
         self.cvCap = cv2.VideoCapture(0)
         self.check = 1
