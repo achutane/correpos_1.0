@@ -38,10 +38,10 @@ class myWindow(QWidget):
         self.sheets = []
         self.sheets.append(initSheet(self) )
         self.sheets.append(driveSheet(self) )
-        self.sheets.append(logSheet(self) )
+        #self.sheets.append(logSheet(self) )
         self.sheets.append(titleSheet(self) )
 
-        self.current = 3
+        self.current = 2
         self.sheets[self.current].start()
         
         # ウィンドウ表示
