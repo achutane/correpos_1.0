@@ -9,6 +9,7 @@ from PyQt5.QtGui import *
 from titlesheet import titleSheet
 from initsheet import initSheet
 from drivesheet import driveSheet
+from appsheet import appSheet
 from logsheet import logSheet
 
 import config
@@ -40,6 +41,7 @@ class myWindow(QWidget):
         self.sheets.append(driveSheet(self) )
         self.sheets.append(logSheet(self) )
         self.sheets.append(titleSheet(self) )
+        self.sheets.append(appSheet(self) )
 
         self.current = 3
         self.sheets[self.current].start()
