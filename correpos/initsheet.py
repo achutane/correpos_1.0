@@ -12,6 +12,7 @@ import cv2
 import copy
 
 # --- 定数 ---
+
 BUTTON_SIZE = (200, 50)    # フォント23
 BUTTON_CAP_POS = (700, 455)
 BUTTON_NEXT_POS = (205 + BUTTON_CAP_POS[0], BUTTON_CAP_POS[1] )
@@ -41,6 +42,8 @@ class initSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
+
+
         # --- ボタン配置 ---
         # 撮影ボタン
         self.capButton = QPushButton(TXT_CAP, self)                    # 生成、キャプション

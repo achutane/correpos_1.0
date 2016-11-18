@@ -33,6 +33,16 @@ class myWindow(QWidget):
 #        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
 #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
+        color = QColor(100,100,100,100)
+        color.setAlpha(150)
+
+        palette = QPalette()
+        # palette.setColor(QPalette.Background, Qt.black)
+        backgroundImage = QPixmap("backgroundImage.jpg")
+        brash = QBrush(color, backgroundImage)
+        palette.setBrush(palette.Background, brash)
+        # self.setAutoFillBackground(True)
+        self.setPalette(palette)
 
         # シート作成
         self.sheets = []
