@@ -32,6 +32,20 @@ class driveSheet(sheet):
     def __init__(self, parent):
         super().__init__(parent)
         
+        
+        #以下のprintは設定用変数の確認に使いました
+        """
+        print("status")
+        print(self.parent.notice_num)
+        print(self.parent.popup_num)
+        print(self.parent.volume_num)
+        print(self.parent.worktime)
+        print(self.parent.work_num)
+        print(self.parent.bar_num)
+        print(self.parent.judgelevel_num)
+        """
+        
+        
         self.text = QTextEdit(self)		# ログ枠
         self.text.move(50,400)
         self.text.resize(400,150)
@@ -64,7 +78,7 @@ class driveSheet(sheet):
         self.sldlevel = QLabel(self)
         self.sldlevel.move(610,240)
         self.sldlevel.setText("ゲージ増加レベル:")
-        self.level1=QRadioButton("すこし", self)    #判定レベル　ラジオボタン作成
+        self.level1=QRadioButton("すこし", self)    #ゲージ増加レベル　ラジオボタン作成
         self.level1.move(750,240)
         self.level2=QRadioButton("ふつう", self)
         self.level2.move(800,240)
@@ -117,7 +131,7 @@ class driveSheet(sheet):
         self.slider = QSlider(Qt.Vertical)  #スライダの向き
         self.slider.setRange(0, 100)  # スライダの範囲
         self.slider.setValue(50)  # 初期値
-        self.slider_label = QLabel('Volume :'+str(self.slider.value())) #volume:スライダの値
+        self.slider_label = QLabel('Volume :'+str(self.parent.volume_num)) #volume:スライダの値
         self.slider.valueChanged.connect(self.text_draw) #スライダの値が変わったらtext_drawを実行                
         self.checkbutton = QPushButton("音量テスト") #音量の確認ボタン
         self.checkbutton.setFocusPolicy(Qt.NoFocus)
@@ -136,7 +150,6 @@ class driveSheet(sheet):
         
         #判定レベル、状態画像表示に関する変数初期化
         self.picturechange = 0
-        self.level = 2
         self.count = 50
         self.multi = 2
         self.th = 35       #顔の距離の閾値
@@ -233,9 +246,29 @@ class driveSheet(sheet):
         
         #猫背をチェックする
     def nekose_check(self):
+        
+        #通知するかどうかの変数設定切り替え
+        if(self.noticeEnable.isChecked() ):
+    	    self.parent.notice_num = 1
+        else:
+            self.parent.notice_num = 0
+        
+        #ポップアップするかどうかの変数設定切り替え
+        if(self.message_boxEnable.isChecked() ):
+            self.parent.popup_num = 1
+        else:
+            self.parent.popup_num = 0
+        
+        #音量の大きさに関する変数設定切り替え
+        self.parent.volume_num = self.slider.value()
+        
+        #作業時間に関する変数設定切り替え
+        if(self.workHourButton.isChecked() ):
+            self.parent.work_num = 1
+        
         ret, self.frame1 = self.cvCap.read() 
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
-        print(facerect)
+       # print(facerect)
         
         if(len(facerect) > 0):	# 顔検出した
             self.face = True 
@@ -270,19 +303,43 @@ class driveSheet(sheet):
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
         self.levelcheck()
         self.facelevelcheck()
+        
+        #設定用変数がちゃんと変化しているかを確認するのに使いました
+        """
+        print("status")
+        print(self.parent.notice_num)
+        print(self.parent.popup_num)
+        print(self.parent.volume_num)
+        print(self.parent.worktime)
+        print(self.parent.work_num)
+        print(self.parent.bar_num)
+        print(self.parent.judgelevel_num)
+        """
+        
+        
         if(self.evalNekose(self.width, self.height, config.width_s, config.height_s)):    # 評価
             
-            #判定レベルに関する変数代入
-            if(self.level == 1):
-                self.count = 100
-                self.multi = 1
-            elif(self.level == 2):
+            #ゲージ増加レベルに関する変数代入
+            if(self.parent.bar_num == 0):
+                self.count = 100   #カウント数
+                self.multi = 1     #倍数
+            elif(self.parent.bar_num == 1):
                 self.count = 50
                 self.multi = 2
-            elif(self.level == 3):
+            elif(self.parent.bar_num == 2):
                 self.count = 25
                 self.multi = 4
             
+            #判定レベルに関する変数代入
+            if(self.parent.judgelevel_num == 0):
+                self.multi_y = 0.5   #顔の上下の判定
+                self.th = 50           #顔の距離の閾値
+            elif(self.parent.judgelevel_num == 1):
+                self.multi_y = 0.3
+                self.th = 35
+            elif(self.parent.judgelevel_num == 2):
+                self.multi_y = 0.2
+                self.th = 35
             
             #一定時間で元の姿勢画像に戻す
             self.picturechange = self.picturechange + 1
@@ -308,41 +365,36 @@ class driveSheet(sheet):
                 self.nekoze_pbar.setValue(self.check*self.multi) #checkを猫背ゲージに代入
 
     def notice(self):
-        if(self.noticeEnable.isChecked() ): # 通知をする場合
-            wavplay_pygame.play(self.selectSE,self.slider.value()) #選択したSEを鳴らす
+        if(self.parent.notice_num == 1 ): # 通知をする場合
+            wavplay_pygame.play(self.selectSE,self.parent.volume_num) #選択したSEを鳴らす
             # その他通知(あれば)
-            if(self.message_boxEnable.isChecked() ): # 通知をする場合
+            if(self.parent.popup_num == 1 ): # 通知をする場合
                 self.balloon()
     
     #判定レベル設定
     def levelcheck(self):
-        if(self.noticeEnable.isChecked() ):
-            self.level = 2
+        if(self.parent.notice_num == 1 ):
+            self.parent.bar_num = 1
             if(self.level1.isChecked()):
                 self.leveltext.setText("すこし")
-                self.level = 1
+                self.parent.bar_num = 0
             elif(self.level2.isChecked()):
                 self.leveltext.setText("ふつう")
-                self.level = 2
+                self.parent.bar_num = 1
             elif(self.level3.isChecked()):
                 self.leveltext.setText("おおい")
-                self.level = 3
+                self.parent.bar_num = 2
                 
     def facelevelcheck(self):
         if(self.clevel1.isChecked()):
             self.cleveltext.setText("ゆるい")
-            self.multi_y = 0.5   #顔の上下の判定
-            self.th=50           #顔の距離の閾値
-
+            self.parent.judgelevel_num = 0
         elif(self.clevel2.isChecked()):
             self.cleveltext.setText("ふつう")
-            self.multi_y = 0.3   #顔の上下の判定
-            self.th=35           #顔の距離の閾値
-
+            self.parent.judgelevel_num = 1
         elif(self.clevel3.isChecked()):
             self.cleveltext.setText("きびしい")
-            self.multi_y = 0.2   #顔の上下の判定
-            self.th=35           #顔の距離の閾値
+            self.parent.judgelevel_num = 2
 
     
     # 猫背評価
@@ -392,13 +444,13 @@ class driveSheet(sheet):
 
             
     def text_draw(self): #音量設定のVolumeが変更されたときに表示テキストを変える
-        self.slider_label.setText('Volume :'+str(self.slider.value()))
+        self.slider_label.setText('Volume :'+str(self.parent.volume_num))
         
     def button_clicked(self): #音量テストのボタンが押されたときに走る
         button = self.sender()
         if button is None or not isinstance(button,QPushButton):
             return
-        wavplay_pygame.play(self.selectSE,self.slider.value())
+        wavplay_pygame.play(self.selectSE,self.parent.volume_num)
 
     def message_box(self): # ポップアップ表示 message  使わないけど一応残しとくmessage
         QMessageBox.warning(self, "CorrePos", u"猫背検知！！")
@@ -413,17 +465,17 @@ class driveSheet(sheet):
 
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
-        wavplay_pygame.play(text,self.slider.value()) #音を鳴ら
+        wavplay_pygame.play(text,self.parent.volume_num) #音を鳴ら
         
     # 作業終了時刻
     def checkWorkHour(self):
         # 設定が有効
-        if(self.workHourButton.isChecked() ):
+        if(self.parent.work_num == 1 ):
           currentTime = QDateTime.currentDateTime().time().toString("hh:mm")
-          workTime = self.workHourEdit.time().toString("hh:mm")
+          self.parent.worktime = self.workHourEdit.time().toString("hh:mm")
           
           # 終了時刻になった
-          if(currentTime == workTime):
+          if(currentTime == self.parent.worktime):
               str = "作業終了！"
               print(str)
               
@@ -436,5 +488,7 @@ class driveSheet(sheet):
               
               self.workHourButton.setChecked(False)
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
-
+              self.parent.work_num = 0
+              self.parent.notice_num = 0
+              
               self.write_log(str)
