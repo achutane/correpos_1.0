@@ -25,6 +25,16 @@ class myWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+        
+         #設定用変数の初期化
+        self.notice_num = 1    #通知はON
+        self.popup_num = 1    #ポップアップはON
+        self.volume_num = 50    #音量の初期値は50
+        self.worktime = "0"    #作業時間はとりあえず"0"
+        self.work_num = 0    #作業時間はOFF
+        self.bar_num = 1    #バーの増加レベルはふつう
+        self.judgelevel_num = 1    #判定レベルはふつう
+        
         self.initUI()
 
     def initUI(self):
