@@ -27,6 +27,7 @@ class titleSheet(sheet):
         self.titleLabel = QLabel(self)
         self.pmap = QPixmap("title.png")
         self.titleLabel.setPixmap(self.pmap)
+        self.titleLabel.move(0,0)
         self.titleLabel.setFixedSize(IMG_SIZE[0], IMG_SIZE[1])
         # self.titleLabel.move(IMG1_POS[0], IMG1_POS[1])    # 位置
 

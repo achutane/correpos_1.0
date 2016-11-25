@@ -12,6 +12,7 @@ from drivesheet import driveSheet
 from appsheet import appSheet
 from logsheet import logSheet
 
+import cv2
 import config
 
 # --- 定数 ---
@@ -26,6 +27,19 @@ class myWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+        
+        # カメラ変数
+        self.cvCap = cv2.VideoCapture(0)
+        
+         #設定用変数の初期化
+        self.notice_num = 1    #通知はON
+        self.popup_num = 1    #ポップアップはON
+        self.volume_num = 50    #音量の初期値は50
+        self.worktime = "0"    #作業時間はとりあえず"0"
+        self.work_num = 0    #作業時間はOFF
+        self.bar_num = 1    #バーの増加レベルはふつう
+        self.judgelevel_num = 1    #判定レベルはふつう
+        
         self.initUI()
         
         self.aaa = "aaa"
@@ -36,16 +50,26 @@ class myWindow(QWidget):
 #        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
 #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
+        color = QColor(100,100,100,100)
+        color.setAlpha(150)
+
+        palette = QPalette()
+        # palette.setColor(QPalette.Background, Qt.black)
+        backgroundImage = QPixmap("backgroundImage.jpg")
+        brash = QBrush(color, backgroundImage)
+        palette.setBrush(palette.Background, brash)
+        # self.setAutoFillBackground(True)
+        self.setPalette(palette)
 
         # シート作成
         self.sheets = []
         self.sheets.append(initSheet(self) )
         self.sheets.append(driveSheet(self) )
-        self.sheets.append(logSheet(self) )
+        #self.sheets.append(logSheet(self) )
         self.sheets.append(titleSheet(self) )
         self.sheets.append(appSheet(self) )
 
-        self.current = 3
+        self.current = 2
         self.sheets[self.current].start()
         
         # ウィンドウ表示
