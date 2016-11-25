@@ -14,7 +14,6 @@ import cv2
 import wavplay_pygame
 from os.path import join, relpath
 from glob import glob
-import copy
 import pandas as pd
 import os.path
 
@@ -189,7 +188,7 @@ class driveSheet(sheet):
         super().start()
         self.start_log()
         self.auto()
-        self.cvCap = cv2.VideoCapture(0)
+        self.cvCap = self.parent.cvCap
         self.check = 1
         self.face = False   #顔が認識されている場合True
         
@@ -200,9 +199,6 @@ class driveSheet(sheet):
           
     def stop(self):
         super().stop()
-        # カメラリリース
-        self.cvCap.release()
-        self.cvCap = None
         
         # タイマー終了
         self.timer.stop()
