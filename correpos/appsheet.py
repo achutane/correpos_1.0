@@ -88,7 +88,7 @@ class appSheet(sheet):
     
     # ログ
     def on_clicked_log(self):
-        self.parent.setSheet(2)
+        print("log")
     
     # 設定
     def on_clicked_setting(self):
@@ -97,14 +97,12 @@ class appSheet(sheet):
     # 遷移時の処理(開始)
     def start(self):
         super().start()
-        self.cvCap = cv2.VideoCapture(0)
+        self.cvCap = self.parent.cvCap
         
         
     # 遷移時の処理(終了)
     def stop(self):
         super().stop()
-        self.cvCap.release()
-        self.cvCap = None
         
         self.debWindow.hide()
         
