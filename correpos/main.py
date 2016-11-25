@@ -27,6 +27,8 @@ class myWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        
+        self.aaa = "aaa"
 
     def initUI(self):
         # ウィンドウ設定

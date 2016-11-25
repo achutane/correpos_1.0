@@ -39,9 +39,14 @@ class appSheet(sheet):
         self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
         
         # 各ボタン
-        self.recapButton = QPushButton( QIcon("cameraIcon.png"), "")
-        self.logButton = QPushButton( QIcon("logIcon.png"), "")
-        self.settingButton = QPushButton( QIcon("settingIcon.png"), "")
+        self.recapButton = QPushButton( QIcon("cameraIcon.png"), "")	# 再撮影
+        self.recapButton.clicked.connect( self.on_clicked_recap )
+        
+        self.logButton = QPushButton( QIcon("logIcon.png"), "")			# ログ
+        self.logButton.clicked.connect( self.on_clicked_log )
+        
+        self.settingButton = QPushButton( QIcon("settingIcon.png"), "")	# 設定
+        self.settingButton.clicked.connect( self.on_clicked_setting )
         
         # ボタンサイズ設定
         for b in [self.recapButton, self.logButton, self.settingButton]:
@@ -71,9 +76,49 @@ class appSheet(sheet):
         
         self.setLayout(vb1)	# /全体
         
+        # デバッグ用ウィンドウ
+        self.debWindow = QWidget()
+        self.videoLabel = QLabel(self.debWindow)	# ラベル
+        self.videoLabel.setFixedSize(IMG_SIZE[0], IMG_SIZE[1])
+        
+        
+    # 再撮影
+    def on_clicked_recap(self):
+        self.parent.setSheet(0)
+    
+    # ログ
+    def on_clicked_log(self):
+        self.parent.setSheet(2)
+    
+    # 設定
+    def on_clicked_setting(self):
+        print("setting")
+        
+    # 遷移時の処理(開始)
     def start(self):
         super().start()
+        self.cvCap = cv2.VideoCapture(0)
         
-          
+        
+    # 遷移時の処理(終了)
     def stop(self):
         super().stop()
+        self.cvCap.release()
+        self.cvCap = None
+        
+        self.debWindow.hide()
+        
+        
+    # 描画イベント
+    def paintEvent(self, event):
+        if not(self.cvCap is None):
+            ret, self.frame1 = self.cvCap.read()			# キャプチャ
+            frame2 = cv2.resize(self.frame1, IMG_SIZE )		# リサイズ
+            frame2 = frame2[:,::-1]							# 左右反転
+        
+            self.frame = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)    # 色変換 BGR -> RGB
+            img = QImage(self.frame.data, self.frame.shape[1], self.frame.shape[0], QImage.Format_RGB888)    # QImage生成
+            pix = QPixmap.fromImage(img)            # QPixmap生成
+            self.videoLabel.setPixmap(pix)          # 画像貼り付け
+            
+            self.debWindow.show()
