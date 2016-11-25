@@ -100,7 +100,7 @@ class initSheet(sheet):
         super().start()
         
         # カメラ使用
-        self.cvCap = cv2.VideoCapture(0)
+        self.cvCap = self.parent.cvCap
         
         # ボタン初期化
         self.capButton.setText(TXT_CAP)        # 撮影ボタン
@@ -113,10 +113,6 @@ class initSheet(sheet):
     # 動作終了
     def stop(self):
         super().stop()
-        
-        # カメラリリース
-        self.cvCap.release()
-        self.cvCap = None
         
         # 画像廃棄
         self.capLabel.setPixmap(QPixmap())

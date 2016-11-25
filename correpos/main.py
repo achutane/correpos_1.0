@@ -11,6 +11,7 @@ from initsheet import initSheet
 from drivesheet import driveSheet
 from logsheet import logSheet
 
+import cv2
 import config
 
 # --- 定数 ---
@@ -25,6 +26,9 @@ class myWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+        
+        # カメラ変数
+        self.cvCap = cv2.VideoCapture(0)
         
          #設定用変数の初期化
         self.notice_num = 1    #通知はON
