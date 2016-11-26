@@ -16,6 +16,7 @@ from os.path import join, relpath
 from glob import glob
 import pandas as pd
 import os.path
+import option
 
 
 # --- 定数 ---
@@ -170,6 +171,16 @@ class driveSheet(sheet):
         self.logbutton = QPushButton("log",self)
         self.logbutton.clicked.connect(self.on_clicked_log)
         self.logbutton.move(50,550)
+        
+        #optionのボタン
+        self.option = QPushButton("option",self)
+        self.option.clicked.connect(self.on_clicked_option)
+        self.option.move(50,600)        
+        
+        
+    def on_clicked_option(self): #optionのボタンを押したときの処理
+        print("option")
+        option.option(self)
 
     def on_clicked_log(self):
         log.LOG()
