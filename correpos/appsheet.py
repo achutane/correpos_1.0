@@ -17,7 +17,7 @@ from glob import glob
 import copy
 import pandas as pd
 import os.path
-
+import option
 
 # --- 定数 ---
 IMG_SIZE = (400, 300)
@@ -40,8 +40,12 @@ class appSheet(sheet):
         self.th = 35       #顔の距離の閾値
         self.multi_y = 0.3   #顔の上下の判定
         
+        self.selectSE = "!.wav"	# デフォルトSE
+        self.subwindow = None	# 設定ウィンドウ宣言(None)
+        
         self.setUI()
         
+    # UI設定
     def setUI(self):
         # 画像
         imageSize = QSize(100,100)		# サイズ
@@ -120,6 +124,7 @@ class appSheet(sheet):
     # 設定
     def on_clicked_setting(self):
         print("setting")
+        option.option(self)
         
         
     # 開始ログ
@@ -251,7 +256,7 @@ class appSheet(sheet):
     # 通知処理
     def notice(self):
         if(self.parent.notice_num == 1 ): # 通知をする場合
-            wavplay_pygame.play(self.parent.se_num, self.parent.volume_num) #選択したSEを鳴らす
+            wavplay_pygame.play(self.selectSE, self.parent.volume_num) #選択したSEを鳴らす
             # その他通知(あれば)
             if(self.parent.popup_num == 1 ): # 通知をする場合
                 self.balloon()
@@ -331,6 +336,54 @@ class appSheet(sheet):
               
               self.write_log(str)
 
+    # -------- オプション関係 --------
+    def selectSE_onActivated(self,text):
+        self.selectSE=text #selectSEにファイル名を代入
+        self.selectSE_name=text
+        #self.selectSE_list=self.SElist.index
+        wavplay_pygame.play(text,self.parent.volume_num) #音を鳴ら
+        
+    
+    def text_draw(self): #音量設定のVolumeが変更されたときに表示テキストを変える
+        self.slider_label.setText('音量 :'+str(self.parent.volume_num))
+        self.parent.volume_num=self.slider.value()
+        
+        
+    def button_clicked(self): #音量テストのボタンが押されたときに走る
+        button = self.sender()
+        if button is None or not isinstance(button,QPushButton):
+            return
+        wavplay_pygame.play(self.selectSE,self.parent.volume_num)
+        
+        
+    def on_clicked_noticeEnable(self): #optionの通知を押したときの処理
+        self.parent.notice_num =  (self.parent.notice_num+1)%2
+        
+    def on_clicked_message_boxEnable(self): #optionのポップアップ通知を押したときの処理
+        self.parent.popup_num =  (self.parent.popup_num+1)%2
+        #print(self.parent.popup_num)
+        
+    def on_clicked_workHourEdit(self): #optionの作業時間の通知ＯＮ・ＯＦＦの処理
+        self.parent.work_num =  (self.parent.work_num+1)%2
+        #print(self.parent.popup_num)
+        
+        
+    #判定レベルのラジオボタンを押したときの処理
+    def on_clicked_clevel1(self):
+        self.parent.judgelevel_num = 0
+    def on_clicked_clevel2(self):
+        self.parent.judgelevel_num = 1
+    def on_clicked_clevel3(self):
+        self.parent.judgelevel_num = 2 
+
+    #ゲージ増加レベルのラジオボタンを押したときの処理
+    def on_clicked_level1(self):
+        self.parent.bar_num = 0
+    def on_clicked_level2(self):
+        self.parent.bar_num = 1
+    def on_clicked_level3(self):
+        self.parent.bar_num = 2 
+
 
     # -------- シート/ウィンドウ処理 --------
     # 遷移時の処理(開始)
@@ -366,4 +419,6 @@ class appSheet(sheet):
 
     #
     def closeEvent(self, event):
-        self.debWindow.hide()
+        if not self.subwindow is None:
+            self.subwindow.close()
+        self.debWindow.close()
