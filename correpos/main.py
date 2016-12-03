@@ -47,6 +47,7 @@ class myWindow(QWidget):
     def initUI(self):
         # ウィンドウ設定
         self.setWindowTitle(APPNAME)                        # キャプション
+        self.setWindowIcon(QIcon('img/correpos_icon.png'))
 #        self.setFixedSize(WINDOW_SIZE[0], WINDOW_SIZE[1])    # サイズ
 #       self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
@@ -55,7 +56,7 @@ class myWindow(QWidget):
 
         palette = QPalette()
         # palette.setColor(QPalette.Background, Qt.black)
-        backgroundImage = QPixmap("backgroundImage.jpg")
+        backgroundImage = QPixmap("img/backgroundImage.jpg")
         brash = QBrush(color, backgroundImage)
         palette.setBrush(palette.Background, brash)
         # self.setAutoFillBackground(True)
@@ -78,7 +79,7 @@ class myWindow(QWidget):
 
         # バルーンのためのアイコン（右下に常駐）
         config.trayIcon = QSystemTrayIcon(self)
-        config.trayIcon.setIcon(QIcon("man.png")) # とりあえず適当にこの画像
+        config.trayIcon.setIcon(QIcon("img/correpos_icon.png")) # とりあえず適当にこの画像
         config.trayIcon.show()
         
     # シート切り替え

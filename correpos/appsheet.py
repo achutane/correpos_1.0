@@ -49,19 +49,19 @@ class appSheet(sheet):
     def setUI(self):
         # 画像
         imageSize = QSize(100,100)		# サイズ
-        self.image = QImage("man.png").scaled(imageSize)
+        self.image = QImage("img/man.png").scaled(imageSize)
         self.imageLabel = QLabel()
         self.imageLabel.setFixedSize(imageSize)
         self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
         
         # 各ボタン
-        self.recapButton = QPushButton( QIcon("cameraIcon.png"), "")	# 再撮影
+        self.recapButton = QPushButton( QIcon("img/cameraIcon.png"), "")	# 再撮影
         self.recapButton.clicked.connect( self.on_clicked_recap )
         
-        self.logButton = QPushButton( QIcon("logIcon.png"), "")			# ログ
+        self.logButton = QPushButton( QIcon("img/logIcon.png"), "")			# ログ
         self.logButton.clicked.connect( self.on_clicked_log )
         
-        self.settingButton = QPushButton( QIcon("settingIcon.png"), "")	# 設定
+        self.settingButton = QPushButton( QIcon("img/settingIcon.png"), "")	# 設定
         self.settingButton.clicked.connect( self.on_clicked_setting )
         
         # ボタンサイズ設定
@@ -305,7 +305,7 @@ class appSheet(sheet):
     # バルーン表示
     def balloon(self):
         icon = QSystemTrayIcon.MessageIcon(2) # 引数によりアイコンが変わる
-        config.trayIcon.showMessage("CorrePos","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
+        config.trayIcon.showMessage("CORREPOS","猫背検知！！", icon, 5000) # 最後の引数は自動消失までの時間(ms)．
         # 参考URL http://kyoui3350.blog96.fc2.com/blog-entry-344.html
         # http://pyqt.sourceforge.net/Docs/PyQt4/qsystemtrayicon.html
         
@@ -323,11 +323,13 @@ class appSheet(sheet):
               print(str)
               
               # 終了通知
-              self.dlg = QMessageBox(self)
-              self.dlg.setText(str)
-              self.dlg.setWindowTitle("CorrePos")
-              self.dlg.show()
-              self.activateWindow()
+              # self.dlg = QMessageBox(self)
+              # self.dlg.setText(str)
+              # self.dlg.setWindowTitle("CorrePos")
+              # self.dlg.show()
+              # self.activateWindow()
+              icon = QSystemTrayIcon.MessageIcon(1)
+              config.trayIcon.showMessage("CORREPOS",str, icon, 5000)
               
               self.workHourButton.setChecked(False)
               self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
