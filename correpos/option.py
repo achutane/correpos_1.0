@@ -146,14 +146,6 @@ def option(self):
         self.level2.setChecked(True)
     else:
         self.level3.setChecked(True)
-    
-    #判定レベル、状態画像表示に関する変数初期化
-    self.picturechange = 0
-    self.level = 2
-    self.count = 50
-    self.multi = 2
-    self.th = 35       #顔の距離の閾値
-    self.multi_y = 0.3   #顔の上下の判定
 
     self.mainWidget=QWidget(self) #音量設定の枠wの作成
     self.mainWidget=QVBoxLayout(self) #音量テストをまとめる横方向のレイアウトの作成
@@ -163,9 +155,6 @@ def option(self):
     self.mainWidget.addWidget(self.checklevel_widget)
     self.mainWidget.addWidget(self.gaugelevel_widget)
         
-    #self.change_option(self)
-
-
 
     self.subwindow.setLayout(self.mainWidget) #レイアウトをｗに突っ込む
 
@@ -181,10 +170,6 @@ def option(self):
     self.level2.clicked.connect(self.on_clicked_level2)
     self.level3.clicked.connect(self.on_clicked_level3)
     
-    # スロットを設定
-    #self.button.clicked.connect(self.subwindow.close)
-    
     self.subwindow.show()
-    #sys.exit(app.exec_())
         
                 
