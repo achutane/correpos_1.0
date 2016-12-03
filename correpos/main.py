@@ -43,7 +43,6 @@ class myWindow(QWidget):
         
         self.initUI()
         
-        self.aaa = "aaa"
 
     def initUI(self):
         # ウィンドウ設定

@@ -189,7 +189,6 @@ class initSheet(sheet):
     # Nextボタンの動作
     def on_clicked_next(self):
         # 処理
-        print(self.parent.aaa)
         self.parent.setSheet(3)
     
     # 再描画イベント：タイマーにしたい
