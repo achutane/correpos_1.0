@@ -64,11 +64,12 @@ class driveSheet(sheet):
         self.nekozecondition_settext.setText("背筋ピーン")
         self.nekozecondition_settext.setGeometry(375,360,70,30)
         
-        
+        """
         self.noticeEnable = QCheckBox(self)	# 通知オン・オフ
         self.noticeEnable.move(700, 50)
         self.noticeEnable.setText("通知する")
         self.noticeEnable.setTristate(False)
+        
         self.message_boxEnable = QCheckBox(self)	# ポップアップ通知オン・オフ
         self.message_boxEnable.move(800, 50)
         self.message_boxEnable.setText("ポップアップ通知")
@@ -111,21 +112,25 @@ class driveSheet(sheet):
         self.cleveltext.resize(50,30)
         self.cleveltext.move(700,253)
         self.cleveltext.setText("ふつう")
+        """
         
-        
-        
+        """
         self.descLabel = QLabel(self)
         self.descLabel.move(650, 78)
         self.descLabel.setText("通知音設定 ： ")
         self.combo_selectSE = QComboBox(self) #ComboBoxの作成
         self.combo_selectSE.move(750,75) #ComboBoxの座標指定
+        """
         path='wav_SE'
-        list = [relpath(x, path) for x in glob(join(path, '*.wav'))] #wav_SEのファイル名を抽出
-        for file in list:
-            self.combo_selectSE.addItem(file)
-        self.selectSE=list[0] #select_SEに文字列を代入　後でwavplayで使用
-        self.combo_selectSE.activated[str].connect(self.selectSE_onActivated) #ComboBoxで選んだ時の動作
+        self.SElist = [relpath(x, path) for x in glob(join(path, '*.wav'))] #wav_SEのファイル名を抽出
+        for file in self.SElist:
+            pass
+            #self.combo_selectSE.addItem(file)
+        self.selectSE=self.SElist[0] #select_SEに文字列を代入　後でwavplayで使用
+        #self.selectSE_list=0        
+        #self.combo_selectSE.activated[str].connect(self.selectSE_onActivated) #ComboBoxで選んだ時の動作
         
+        """
         self.w=QWidget(self) #音量設定の枠wの作成
         self.w.setGeometry(650,100,300,100) #音量設定の枠の座標 (y,x,width,height)     
         self.slider = QSlider(Qt.Vertical)  #スライダの向き
@@ -141,6 +146,7 @@ class driveSheet(sheet):
         self.changevolume.addWidget(self.slider)
         self.changevolume.addWidget(self.checkbutton)
         self.w.setLayout(self.changevolume) #レイアウトをｗに突っ込む
+        """
 
         #通知画像表示
         self.noticeLabel = QLabel(self)
@@ -155,6 +161,7 @@ class driveSheet(sheet):
         self.th = 35       #顔の距離の閾値
         self.multi_y = 0.3   #顔の上下の判定
         
+        """
         # 作業終了時刻の設定
         self.workHourButton = QCheckBox(self)                      # 有効・無効設定
         self.workHourButton.setText("作業終了時刻を設定する：")
@@ -163,7 +170,7 @@ class driveSheet(sheet):
         self.workHourEdit = QDateTimeEdit(self)                    # 時刻設定
         self.workHourEdit.move(800, 200)
         self.workHourEdit.setDisplayFormat("hh:mm")
-
+        """
         # deb:再設定
         self.b = QPushButton("再設定", self)
         self.b.clicked.connect(self.on_clicked)
@@ -181,6 +188,33 @@ class driveSheet(sheet):
     def on_clicked_option(self): #optionのボタンを押したときの処理
         print("option")
         option.option(self)
+        
+    def on_clicked_noticeEnable(self): #optionの通知を押したときの処理
+        self.parent.notice_num =  (self.parent.notice_num+1)%2
+        
+    def on_clicked_message_boxEnable(self): #optionのポップアップ通知を押したときの処理
+        self.parent.popup_num =  (self.parent.popup_num+1)%2
+        #print(self.parent.popup_num)
+        
+    def on_clicked_workHourEdit(self): #optionの作業時間の通知ＯＮ・ＯＦＦの処理
+        self.parent.work_num =  (self.parent.work_num+1)%2
+        #print(self.parent.popup_num)
+        
+    #判定レベルのラジオボタンを押したときの処理
+    def on_clicked_clevel1(self):
+        self.parent.judgelevel_num = 0
+    def on_clicked_clevel2(self):
+        self.parent.judgelevel_num = 1
+    def on_clicked_clevel3(self):
+        self.parent.judgelevel_num = 2 
+
+    #ゲージ増加レベルのラジオボタンを押したときの処理
+    def on_clicked_level1(self):
+        self.parent.bar_num = 0
+    def on_clicked_level2(self):
+        self.parent.bar_num = 1
+    def on_clicked_level3(self):
+        self.parent.bar_num = 2 
 
     def on_clicked_log(self):
         log.LOG()
@@ -203,10 +237,16 @@ class driveSheet(sheet):
         self.check = 1
         self.face = False   #顔が認識されている場合True
         
-        self.noticeEnable.setChecked(True)
-        self.message_boxEnable.setChecked(True)
+        
+        self.parent.notice_num = 1
+        self.parent.pupup_num=1
+        
 
 
+        #self.noticeEnable.setChecked(True)
+        #self.message_boxEnable.setChecked(True)
+        
+        
           
     def stop(self):
         super().stop()
@@ -254,6 +294,7 @@ class driveSheet(sheet):
         #猫背をチェックする
     def nekose_check(self):
         
+        """
         #通知するかどうかの変数設定切り替え
         if(self.noticeEnable.isChecked() ):
     	    self.parent.notice_num = 1
@@ -272,6 +313,7 @@ class driveSheet(sheet):
         #作業時間に関する変数設定切り替え
         if(self.workHourButton.isChecked() ):
             self.parent.work_num = 1
+        """        
         
         ret, self.frame1 = self.cvCap.read() 
         facerect = cascade.detectMultiScale(self.frame1, scaleFactor=1.2, minNeighbors=2, minSize=(10, 10))
@@ -308,8 +350,8 @@ class driveSheet(sheet):
         
         # 猫背チェック
 #        if self.width >= width_s*1.5 and self.height >= height_s*1.5:
-        self.levelcheck()
-        self.facelevelcheck()
+        #self.levelcheck()
+        #self.facelevelcheck()
         
         #設定用変数がちゃんと変化しているかを確認するのに使いました
         """
@@ -378,8 +420,11 @@ class driveSheet(sheet):
             if(self.parent.popup_num == 1 ): # 通知をする場合
                 self.balloon()
     
+    
+    """
     #判定レベル設定
     def levelcheck(self):
+        print("check")
         if(self.parent.notice_num == 1 ):
             self.parent.bar_num = 1
             if(self.level1.isChecked()):
@@ -393,6 +438,7 @@ class driveSheet(sheet):
                 self.parent.bar_num = 2
                 
     def facelevelcheck(self):
+        
         if(self.clevel1.isChecked()):
             self.cleveltext.setText("ゆるい")
             self.parent.judgelevel_num = 0
@@ -402,7 +448,7 @@ class driveSheet(sheet):
         elif(self.clevel3.isChecked()):
             self.cleveltext.setText("きびしい")
             self.parent.judgelevel_num = 2
-
+    """
     
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
@@ -451,7 +497,8 @@ class driveSheet(sheet):
 
             
     def text_draw(self): #音量設定のVolumeが変更されたときに表示テキストを変える
-        self.slider_label.setText('Volume :'+str(self.parent.volume_num))
+        self.slider_label.setText('音量 :'+str(self.parent.volume_num))
+        self.parent.volume_num=self.slider.value()
         
     def button_clicked(self): #音量テストのボタンが押されたときに走る
         button = self.sender()
@@ -472,6 +519,8 @@ class driveSheet(sheet):
 
     def selectSE_onActivated(self,text):
         self.selectSE=text #selectSEにファイル名を代入
+        self.selectSE_name=text
+        #self.selectSE_list=self.SElist.index
         wavplay_pygame.play(text,self.parent.volume_num) #音を鳴ら
         
     # 作業終了時刻
@@ -493,9 +542,10 @@ class driveSheet(sheet):
               self.dlg.show()
               self.activateWindow()
               
-              self.workHourButton.setChecked(False)
-              self.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
+              #self.workHourButton.setChecked(False)
+              #Sself.noticeEnable.setChecked(False)    # 通知を無効化（暫定）
               self.parent.work_num = 0
               self.parent.notice_num = 0
+              self.parent.popup_num=0
               
               self.write_log(str)
