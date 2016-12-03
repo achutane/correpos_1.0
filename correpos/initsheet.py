@@ -66,7 +66,7 @@ class initSheet(sheet):
         # --- 画像配置 ---
         #説明画像表示
         self.instLabel = QLabel(self)
-        self.pmap = QPixmap("instruction.png")
+        self.pmap = QPixmap("img/instruction.png")
         self.instLabel.setPixmap(self.pmap)
 
         # 映像表示

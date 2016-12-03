@@ -11,9 +11,9 @@ from PyQt5.QtGui import *
 
 # --- 定数 ---
 BUTTON_SIZE = (200, 50)    # フォント23
-BUTTON_START_POS = (400, 430)
+BUTTON_START_POS = (222, 272)
 
-IMG_SIZE = (1000, 500)
+IMG_SIZE = (644, 322)
 IMG1_POS = (100, 150)
 
 TXT_START = "START"
@@ -25,7 +25,7 @@ class titleSheet(sheet):
         
         # --- 画像配置 
         self.titleLabel = QLabel(self)
-        self.pmap = QPixmap("title.png")
+        self.pmap = QPixmap("img/title.png")
         self.titleLabel.setPixmap(self.pmap)
         self.titleLabel.move(0,0)
         self.titleLabel.setFixedSize(IMG_SIZE[0], IMG_SIZE[1])
