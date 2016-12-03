@@ -151,7 +151,7 @@ class driveSheet(sheet):
         #通知画像表示
         self.noticeLabel = QLabel(self)
         self.noticeLabel.move(700,270)
-        self.pmap = QPixmap("man.png")
+        self.pmap = QPixmap("img/0.png")
         self.noticeLabel.setPixmap(self.pmap)
         
         #判定レベル、状態画像表示に関する変数初期化
@@ -294,6 +294,9 @@ class driveSheet(sheet):
         #猫背をチェックする
     def nekose_check(self):
         
+        #アバター画像表示
+        self.noticeLabel.setPixmap(self.pmap)
+        
         """
         #通知するかどうかの変数設定切り替え
         if(self.noticeEnable.isChecked() ):
@@ -390,19 +393,10 @@ class driveSheet(sheet):
                 self.multi_y = 0.2
                 self.th = 35
             
-            #一定時間で元の姿勢画像に戻す
-            self.picturechange = self.picturechange + 1
-            if self.picturechange == 10:
-                print("change!!")
-                self.pmap = QPixmap("man.png")
-                self.noticeLabel.setPixmap(self.pmap)
             if self.face: # 顔が認識されている場合
                 self.check = (self.check + 1)%(self.count + 1)    # カウント
             self.nekoze_pbar.setValue(self.check*self.multi) #checkを猫背ゲージに代入
             if self.check == self.count: # 50カウント後
-                self.pmap = QPixmap("nekoze.png")
-                self.noticeLabel.setPixmap(self.pmap)
-                self.picturechange = 0
                 self.notice()       # 通知
                 self.time_draw()    # ログ追加
                 self.check = 0
@@ -461,6 +455,20 @@ class driveSheet(sheet):
         
         # 評価
         ev = abs( (s1 - s0) / s0 * 100 )
+        
+        #evの値によってアバター画像切り替え
+        if ev >= 0 and ev <= 15:
+            self.pmap = QPixmap("img/0.png")
+        elif ev > 15 and ev <= 25:
+            self.pmap = QPixmap("img/20.png")
+        elif ev > 25 and ev <= 35:
+            self.pmap = QPixmap("img/40.png")
+        elif ev > 35 and ev <= 50: 
+            self.pmap = QPixmap("img/60.png")
+        elif ev > 50 and ev <= 65:
+            self.pmap = QPixmap("img/80.png")
+        elif ev > 65:
+            self.pmap = QPixmap("img/100.png")
         
         # 出力
         #print(ev)
