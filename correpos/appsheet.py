@@ -49,7 +49,7 @@ class appSheet(sheet):
     def setUI(self):
         # 画像
         imageSize = QSize(100,100)		# サイズ
-        self.image = QImage("img/man.png").scaled(imageSize)
+        self.image = QImage("img/0.png").scaled(imageSize)
         self.imageLabel = QLabel()
         self.imageLabel.setFixedSize(imageSize)
         self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
@@ -279,6 +279,22 @@ class appSheet(sheet):
         
         # 評価
         ev = abs( (s1 - s0) / s0 * 100 )
+        
+        #evの値によってアバター画像切り替え
+        imageSize = QSize(100,100)
+        if ev >= 0 and ev <= 15:
+            self.image = QImage("img/0.png").scaled(imageSize)
+        elif ev > 15 and ev <= 25:
+            self.image = QImage("img/20.png").scaled(imageSize)
+        elif ev > 25 and ev <= 35:
+            self.image = QImage("img/40.png").scaled(imageSize)
+        elif ev > 35 and ev <= 50: 
+            self.image = QImage("img/60.png").scaled(imageSize)
+        elif ev > 50 and ev <= 65:
+            self.image = QImage("img/80.png").scaled(imageSize)
+        elif ev > 65:
+            self.image = QImage("img/100.png").scaled(imageSize)
+        self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
         
         # 出力
         #print(ev)
