@@ -160,6 +160,18 @@ def option(self):
     else:
         self.level3.setChecked(True)
 
+    self.tweetbutton = QPushButton("tweet設定",self)
+    self.tweet_enable = QCheckBox("tweetする",self)
+    if(self.parent.tweet_num==1): #ＯＮかＯＦＦかを調べる
+        self.tweet_enable.setChecked(True)
+    else:
+        self.tweet_enable.setChecked(False)
+    self.tweet_layout = QHBoxLayout()
+    self.tweet_layout.addWidget(self.tweet_enable)
+    self.tweet_layout.addWidget(self.tweetbutton)
+    self.tweet_widget = QWidget()
+    self.tweet_widget.setLayout(self.tweet_layout)
+
 #    self.mainWidget=QWidget() #音量設定の枠wの作成
     self.mainWidget=QVBoxLayout() #音量テストをまとめる横方向のレイアウトの作成
     self.mainWidget.addWidget(self.message_Widget)
@@ -167,6 +179,8 @@ def option(self):
     self.mainWidget.addWidget(self.volume_widget)
     self.mainWidget.addWidget(self.checklevel_widget)
     self.mainWidget.addWidget(self.gaugelevel_widget)
+    self.mainWidget.addWidget(self.tweet_widget)
+
         
 
     self.subwindow.setLayout(self.mainWidget) #レイアウトをｗに突っ込む
@@ -182,5 +196,7 @@ def option(self):
     self.level1.clicked.connect(self.on_clicked_level1)
     self.level2.clicked.connect(self.on_clicked_level2)
     self.level3.clicked.connect(self.on_clicked_level3)
-    
+    self.tweetbutton.clicked.connect(self.on_clicked_tweet)
+    self.tweet_enable.clicked.connect(self.on_clicked_tweetEnable)
+        
     self.subwindow.show()

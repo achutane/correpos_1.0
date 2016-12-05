@@ -19,6 +19,11 @@ import pandas as pd
 import os.path
 import option
 
+import tweet_setting
+
+import tweepy
+import webbrowser
+
 # --- 定数 ---
 IMG_SIZE = (400, 300)
 
@@ -26,6 +31,10 @@ cascade_path = "haarcascade_frontalface_alt.xml"
 
 #カスケード分類器の特徴量を取得する
 cascade = cv2.CascadeClassifier(cascade_path) 
+
+#twitter用
+CONSUMER_KEY = "OSpvjHASppfTFGH51ggSrTslf"
+CONSUMER_SECRET = "8w3GEpc4bUT8gT635Yn0UiN2kVewVqUUnLyBkBy8BvZW94N4R9"
 
 # --- 動作中画面 ---
 class appSheet(sheet):
@@ -42,6 +51,8 @@ class appSheet(sheet):
         
         self.selectSE = "!.wav"	# デフォルトSE
         self.subwindow = None	# 設定ウィンドウ宣言(None)
+        self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET) 
+
         
         self.setUI()
         
@@ -260,7 +271,14 @@ class appSheet(sheet):
             # その他通知(あれば)
             if(self.parent.popup_num == 1 ): # 通知をする場合
                 self.balloon()
-    
+            if(self.parent.tweet_num == 1):
+                auth = self.auth
+                df = pd.read_csv('key.csv')
+                df = df['0']
+                auth.set_access_token(df.values[0], df.values[1])
+                api = tweepy.API(auth)
+                api.update_status(status= str(datetime.datetime.today())+"猫背を検知！")
+
     # 判定レベル設定
     def levelcheck(self):
         pass
@@ -405,6 +423,53 @@ class appSheet(sheet):
     def on_clicked_level3(self):
         self.parent.bar_num = 2 
 
+    #tweet設定ボタンを押したときの処理
+    def on_clicked_tweet(self):        
+        print("tweet")
+        tweet_setting.tweet_setting(self)
+
+    def on_clicked_tweetEnable(self):
+        print("tenable")
+
+        if (self.parent.tweet_num == 0):
+            if (self.keyexist is False):
+                tweet_setting.tweet_setting(self)
+            else:
+                self.parent.tweet_num = 1
+            
+        else:
+            self.parent.tweet_num = 0
+
+    def on_clicked_auth(self):
+        auth = self.auth
+        redirect_url = auth.get_authorization_url()
+        webbrowser.open(redirect_url)
+
+    def on_clicked_generate(self):
+        auth = self.auth
+        verifier = self.key_input.text()
+        print(self.key_input.text())
+        # self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+
+        auth.get_access_token(verifier)
+
+        ACCESS_TOKEN = auth.access_token
+        ACCESS_SECRET = auth.access_token_secret
+
+        df = pd.DataFrame([ACCESS_TOKEN,ACCESS_SECRET])       
+        df.to_csv('key.csv')
+
+        self.keyexist = True
+        self.subwindow_t.close()
+
+    def keycheck(self):
+
+        if os.path.exists("key.csv"):
+            self.keyexist = True       
+        else:
+            self.keyexist = False
+
+
     # -------- シート/ウィンドウ処理 --------
     # 遷移時の処理(開始)
     def start(self):
@@ -414,6 +479,7 @@ class appSheet(sheet):
         self.cvCap = self.parent.cvCap
         self.check = 1
         self.face = False	# 顔が認識されている場合True
+        self.keycheck()
         
         
     # 遷移時の処理(終了)
