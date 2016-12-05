@@ -40,7 +40,8 @@ class myWindow(QWidget):
         self.work_num = 0    #作業時間はOFF
         self.bar_num = 1    #バーの増加レベルはふつう
         self.judgelevel_num = 1    #判定レベルはふつう
-        
+
+        self.setWindowFlags(Qt.WindowStaysOnTopHint) # 常に前面に表示        
         self.initUI()
         
 
@@ -84,6 +85,7 @@ class myWindow(QWidget):
         config.trayIcon = QSystemTrayIcon(self)
         config.trayIcon.setIcon(QIcon("img/correpos_icon.png")) # とりあえず適当にこの画像
         config.trayIcon.show()
+
         
     # シート切り替え
     def setSheet(self, num):

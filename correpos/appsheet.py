@@ -268,8 +268,23 @@ class appSheet(sheet):
     # 
     def facelevelcheck(self):
         pass
+
+    def nekozeAvator(self, ev):
+        ev_y = self.face_y
         
-    
+        # 閾値をどうするか要検討
+        th_ev = 65 # 顔の大きさの閾値
+        th_y = config.face_y+config.height_s*0.5 # 顔のy位置
+
+        imageSize = QSize(100,100)
+        for i in [100,80,60,20,0]:
+            if ev>th_ev*i/100 or ev_y>th_y*i/100:
+                self.image = QImage("img/"+str(i)+".png").scaled(imageSize)
+                break
+        if self.face==False: self.image = QImage("img/no_one.png").scaled(imageSize) #いらない？
+        self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
+
+        
     # 猫背評価
     def evalNekose(self, w1, h1, w0, h0):
         
@@ -280,21 +295,8 @@ class appSheet(sheet):
         # 評価
         ev = abs( (s1 - s0) / s0 * 100 )
         
-        #evの値によってアバター画像切り替え
-        imageSize = QSize(100,100)
-        if ev >= 0 and ev <= 15:
-            self.image = QImage("img/0.png").scaled(imageSize)
-        elif ev > 15 and ev <= 25:
-            self.image = QImage("img/20.png").scaled(imageSize)
-        elif ev > 25 and ev <= 35:
-            self.image = QImage("img/40.png").scaled(imageSize)
-        elif ev > 35 and ev <= 50: 
-            self.image = QImage("img/60.png").scaled(imageSize)
-        elif ev > 50 and ev <= 65:
-            self.image = QImage("img/80.png").scaled(imageSize)
-        elif ev > 65:
-            self.image = QImage("img/100.png").scaled(imageSize)
-        self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
+        # アバター画像の切替
+        self.nekozeAvator(ev)
         
         # 出力
         #print(ev)
@@ -317,6 +319,7 @@ class appSheet(sheet):
 #            self.nekozecondition_settext.setText("背筋ピーン")
             return 0
         #return ev > th
+
     
     # バルーン表示
     def balloon(self):
