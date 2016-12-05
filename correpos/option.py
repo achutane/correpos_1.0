@@ -17,6 +17,7 @@ def option(self):
     self.subwindow = QWidget()
     self.subwindow.setWindowTitle("OPTION")
     self.subwindow.setWindowIcon(QIcon('img/correpos_icon.png')) #iconをそろえた
+    self.subwindow.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint) #最大化以外のボタンを有効
     
     """
     #背景をmainのシートと合わせようとしたが文字が見にくいので良いのがあれば後で編集
