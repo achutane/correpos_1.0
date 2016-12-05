@@ -402,7 +402,6 @@ class appSheet(sheet):
     def on_clicked_level3(self):
         self.parent.bar_num = 2 
 
-
     # -------- シート/ウィンドウ処理 --------
     # 遷移時の処理(開始)
     def start(self):
