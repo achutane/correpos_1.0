@@ -16,6 +16,18 @@ def option(self):
     
     self.subwindow = QWidget()
     self.subwindow.setWindowTitle("OPTION")
+    self.subwindow.setWindowIcon(QIcon('img/correpos_icon.png')) #iconをそろえた
+    
+    """
+    #背景をmainのシートと合わせようとしたが文字が見にくいので良いのがあれば後で編集
+    color = QColor(100,100,100,100)
+    color.setAlpha(150)
+    palette = QPalette()
+    backgroundImage = QPixmap("img/backgroundImage.jpg")
+    brash = QBrush(color, backgroundImage)
+    palette.setBrush(palette.Background, brash)
+    self.subwindow.setPalette(palette)
+    """
     
 
     self.noticeEnable = QCheckBox()	# 通知オン・オフ

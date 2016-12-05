@@ -7,6 +7,8 @@ import config
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+#from PyQt5.QtWidgets import QWidget, QDesktopWidget, QApplication
+
 
 import log
 import datetime
@@ -401,7 +403,6 @@ class appSheet(sheet):
         self.parent.bar_num = 1
     def on_clicked_level3(self):
         self.parent.bar_num = 2 
-
 
     # -------- シート/ウィンドウ処理 --------
     # 遷移時の処理(開始)

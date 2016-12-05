@@ -69,9 +69,12 @@ class myWindow(QWidget):
         #self.sheets.append(logSheet(self) )
         self.sheets.append(titleSheet(self) )
         self.sheets.append(appSheet(self) )
+        
 
         self.current = 2
         self.sheets[self.current].start()
+        
+        #self.center()
         
         # ウィンドウ表示
         self.show()
@@ -111,6 +114,17 @@ class myWindow(QWidget):
         # 全シートに対して閉じる処理を実行(closeEvent発生)
         for s in self.sheets:
             s.close()
+            
+    def center(self):
+
+        # ウィンドウ全体の情報を取得した長方形qrを作成
+        qr = self.frameGeometry()
+        # ウィンドウの中心を取得
+        cp = QDesktopWidget().availableGeometry().center()
+        # 長方形qrをウィンドウの中心へ移動
+        qr.moveCenter(cp)
+        #　長方形qrの左上と画面の左上を合わせる
+        self.move(qr.topLeft()) #bottomRight 右下
 
 
 # --- メイン処理 ---
