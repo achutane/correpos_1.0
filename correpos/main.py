@@ -74,7 +74,7 @@ class myWindow(QWidget):
         self.current = 2
         self.sheets[self.current].start()
         
-        #self.center()
+        self.center()
         
         # ウィンドウ表示
         self.show()
