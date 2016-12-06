@@ -123,6 +123,28 @@ class appSheet(sheet):
         self.debWindow.setLayout( vb1 )
         
         
+    def mouseMoveEvent(self, e):
+
+        # 右クリックだけドラッグ＆ドロップ可能にする
+        if e.buttons() != Qt.LeftButton:
+            return
+
+        x=e.globalX()
+        y=e.globalY()
+        x_w = self.parent.offset.x()
+        y_w = self.parent.offset.y()
+        self.parent.move(x-x_w, y-y_w)
+
+    def mousePressEvent(self, e):
+
+        self.parent.offset = e.pos()
+
+        # 左クリックしたときにコンソールにpress表示
+        if e.button() == Qt.LeftButton:
+            print('press')
+
+
+        
     # 再撮影
     def on_clicked_recap(self):
         self.parent.setSheet(0)
