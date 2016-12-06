@@ -107,9 +107,9 @@ class logSheet(sheet):
         self.noticeLabel = QLabel(self)
         self.noticeLabel.move(0,130)
         #self.noticeLabel.resize(10,10)
-        self.pmap1 = QPixmap("fig1.png")
-        self.pmap2 = QPixmap("fig2.png")
-        self.pmap3 = QPixmap("fig3.png")
+        self.pmap1 = QPixmap("img/valuation_verygood.png")
+        self.pmap2 = QPixmap("img/valuation_good.png")
+        self.pmap3 = QPixmap("img/valuation_bad.png")
         
         #self.noticeLabel.setPixmap(self.pmap3)
 
