@@ -40,6 +40,7 @@ class myWindow(QWidget):
         self.work_num = 0    #作業時間はOFF
         self.bar_num = 1    #バーの増加レベルはふつう
         self.judgelevel_num = 1    #判定レベルはふつう
+        self.tweet_num = 0 #twitter用
 
         self.setWindowFlags(Qt.WindowStaysOnTopHint) # 常に前面に表示        
         self.initUI()
