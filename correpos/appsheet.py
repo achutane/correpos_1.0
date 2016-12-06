@@ -137,7 +137,7 @@ class appSheet(sheet):
 
     def mousePressEvent(self, e):
 
-        self.parent.offset = e.pos()
+        self.parent.offset = e.globalPos() - self.parent.pos()		# ウィンドウ左上(アイコンのとこ)とマウス座標の差分
 
         # 左クリックしたときにコンソールにpress表示
         if e.button() == Qt.LeftButton:
