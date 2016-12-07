@@ -319,14 +319,14 @@ class appSheet(sheet):
         
         # 閾値をどうするか要検討
         th_ev = 65 # 顔の大きさの閾値
-        th_y = config.face_y+config.height_s*0.5 # 顔のy位置
+        th_y = config.face_y+config.height_s*0.8 # 顔のy位置
 
         imageSize = QSize(100,100)
         for i in [100,80,60,20,0]:
             if ev>th_ev*i/100 or ev_y>th_y*i/100:
                 self.image = QImage("img/"+str(i)+".png").scaled(imageSize)
                 break
-        if self.face==False: self.image = QImage("img/no_one.png").scaled(imageSize) #いらない？
+        # if self.face==False: self.image = QImage("img/no_one.png").scaled(imageSize) #いらない？
         self.imageLabel.setPixmap( QPixmap.fromImage(self.image) )
 
         
