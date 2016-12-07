@@ -53,6 +53,9 @@ class appSheet(sheet):
         self.subwindow = None	# 設定ウィンドウ宣言(None)
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET) 
 
+        # 映像・ログウィンドウの表示フラグ = False
+        self.showDebWindowFlag = False
+        self.showDebWindow_enable = None
         
         self.setUI()
         
@@ -111,6 +114,8 @@ class appSheet(sheet):
         
         # デバッグ用ウィンドウ
         self.debWindow = QWidget()
+        self.debWindow.closeEvent = self.on_close_debWindow
+        self.debWindow.setWindowTitle("Camera & Log")
         vb1 = QVBoxLayout()
         
         # ラベル
@@ -490,7 +495,18 @@ class appSheet(sheet):
             self.keyexist = True       
         else:
             self.keyexist = False
+            
+    # 映像表示チェックボックス
+    def on_clicked_showDebWindowEnable(self):
+        if( self.showDebWindow_enable.isChecked() ):
+            self.debWindow.show()
+        else:
+            self.debWindow.hide()
 
+    def on_close_debWindow(self, ev):
+        if not self.showDebWindow_enable is None:
+            self.showDebWindow_enable.setChecked(False)
+        ev.accept()
 
     # -------- シート/ウィンドウ処理 --------
     # 遷移時の処理(開始)
@@ -523,7 +539,6 @@ class appSheet(sheet):
             pix = QPixmap.fromImage(img)            # QPixmap生成
             self.videoLabel.setPixmap(pix)          # 画像貼り付け
             
-            self.debWindow.show()
 
     #
     def closeEvent(self, event):
