@@ -171,6 +171,12 @@ def option(self):
     self.tweet_layout.addWidget(self.tweetbutton)
     self.tweet_widget = QWidget()
     self.tweet_widget.setLayout(self.tweet_layout)
+    
+    self.showDebWindow_enable = QCheckBox("カメラ映像等を表示する")
+    self.showDebWindow_layout = QHBoxLayout()
+    self.showDebWindow_layout.addWidget(self.showDebWindow_enable)
+    self.showDebWindow_widget = QWidget()
+    self.showDebWindow_widget.setLayout( self.showDebWindow_layout )
 
 #    self.mainWidget=QWidget() #音量設定の枠wの作成
     self.mainWidget=QVBoxLayout() #音量テストをまとめる横方向のレイアウトの作成
@@ -180,6 +186,7 @@ def option(self):
     self.mainWidget.addWidget(self.checklevel_widget)
     self.mainWidget.addWidget(self.gaugelevel_widget)
     self.mainWidget.addWidget(self.tweet_widget)
+    self.mainWidget.addWidget(self.showDebWindow_widget)
 
         
 
@@ -198,5 +205,6 @@ def option(self):
     self.level3.clicked.connect(self.on_clicked_level3)
     self.tweetbutton.clicked.connect(self.on_clicked_tweet)
     self.tweet_enable.clicked.connect(self.on_clicked_tweetEnable)
+    self.showDebWindow_enable.clicked.connect(self.on_clicked_showDebWindowEnable)
         
     self.subwindow.show()
