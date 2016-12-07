@@ -172,7 +172,7 @@ def option(self):
     self.tweet_widget = QWidget()
     self.tweet_widget.setLayout(self.tweet_layout)
     
-    self.showDebWindow_enable = QCheckBox("カメラ映像等を表示する")
+    self.showDebWindow_enable = QCheckBox("映像・ログウィンドウを表示する")
     self.showDebWindow_layout = QHBoxLayout()
     self.showDebWindow_layout.addWidget(self.showDebWindow_enable)
     self.showDebWindow_widget = QWidget()

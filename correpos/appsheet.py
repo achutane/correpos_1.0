@@ -115,6 +115,7 @@ class appSheet(sheet):
         # デバッグ用ウィンドウ
         self.debWindow = QWidget()
         self.debWindow.closeEvent = self.on_close_debWindow
+        self.debWindow.setWindowTitle("Camera & Log")
         vb1 = QVBoxLayout()
         
         # ラベル
