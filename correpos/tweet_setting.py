@@ -22,7 +22,7 @@ def tweet_setting(self):
     self.auth_button = QPushButton("アプリ認証",self)
     self.auth_button.clicked.connect(self.on_clicked_auth)
     self.key_input = QLineEdit("番号を入力してください",self)
-    self.key_generate = QPushButton("key発行",self)
+    self.key_generate = QPushButton("完了",self)
     self.key_generate.clicked.connect(self.on_clicked_generate)
 
     self.key_widget = QWidget()
