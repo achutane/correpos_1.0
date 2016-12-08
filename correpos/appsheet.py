@@ -304,7 +304,7 @@ class appSheet(sheet):
                 df = df['0']
                 auth.set_access_token(df.values[0], df.values[1])
                 api = tweepy.API(auth)
-                api.update_status(status= str(datetime.datetime.today())+"猫背を検知！")
+                api.update_status(status= str(datetime.datetime.today().strftime("%H:%M:%S")) + "現在私は猫背で作業しています")
 
     # 判定レベル設定
     def levelcheck(self):
