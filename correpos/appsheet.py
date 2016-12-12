@@ -469,8 +469,17 @@ class appSheet(sheet):
 
     def on_clicked_auth(self):
         auth = self.auth
-        redirect_url = auth.get_authorization_url()
-        webbrowser.open(redirect_url)
+        
+        try:
+            self.redirect_url = auth.get_authorization_url()
+            webbrowser.open(self.redirect_url)
+            self.key_generate.setEnabled(True)
+            
+        except:
+            self.error_text.setText("error:twitterの設定にはアプリの再起動が必要 ")
+            webbrowser.open(self.redirect_url)
+            
+
 
     def on_clicked_generate(self):
         auth = self.auth
@@ -478,16 +487,20 @@ class appSheet(sheet):
         print(self.key_input.text())
         # self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 
-        auth.get_access_token(verifier)
-
-        ACCESS_TOKEN = auth.access_token
-        ACCESS_SECRET = auth.access_token_secret
-
-        df = pd.DataFrame([ACCESS_TOKEN,ACCESS_SECRET])       
-        df.to_csv('key.csv')
-
-        self.keyexist = True
-        self.subwindow_t.close()
+        try:
+            auth.get_access_token(verifier)
+            
+            ACCESS_TOKEN = auth.access_token
+            ACCESS_SECRET = auth.access_token_secret
+            
+            df = pd.DataFrame([ACCESS_TOKEN,ACCESS_SECRET])       
+            df.to_csv('key.csv')
+            
+            self.keyexist = True
+            self.subwindow_t.close()
+            
+        except:
+            self.error_text.setText("error:twitterの設定にはアプリの再起動が必要 ")
 
     def keycheck(self):
 
