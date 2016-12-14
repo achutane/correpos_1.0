@@ -33,7 +33,7 @@ class logSheet(sheet):
         self.daybutton.clicked.connect(self.on_clicked_backtoday)
 
         self.changebutton = QPushButton("指定に変更",self)
-        self.changebutton.move(230,6)
+        self.changebutton.move(270,10)
         self.changebutton.resize(100,25)
         self.changebutton.clicked.connect(self.on_clicked_change)
 
@@ -95,7 +95,7 @@ class logSheet(sheet):
 
         self.logLabel3 = QLabel(self)
         self.logLabel3.setFont(font)
-        self.logLabel3.move(40, 450)
+        self.logLabel3.move(40, 430)
 
         self.dpi = 55
         self.fig = Figure((13,8), dpi=self.dpi)
@@ -153,7 +153,7 @@ class logSheet(sheet):
             if(count1>=50):
                 self.noticeLabel.setPixmap(self.pmap3)
                 self.logLabel2.setText("この月の総計: "+str(count1)+"  回 ")
-                self.logLabel3.setText(" これから頑張っでね！！")
+                self.logLabel3.setText(" これから頑張ってね！！")
             elif(count1<=20):
                 self.noticeLabel.setPixmap(self.pmap1)
                 self.logLabel2.setText("この月の総計: "+str(count1)+"  回　")
@@ -178,7 +178,7 @@ class logSheet(sheet):
             if(count>=5):
                 self.noticeLabel.setPixmap(self.pmap3)
                 self.logLabel2.setText("この日の総計: "+str(count)+"  回　")
-                self.logLabel3.setText(" これから頑張っでね！!")
+                self.logLabel3.setText(" これから頑張ってね！!")
             elif(count<=2):
                 self.noticeLabel.setPixmap(self.pmap1)
                 self.logLabel2.setText("この日の総計: "+str(count)+"  回　")
@@ -223,7 +223,7 @@ class logSheet(sheet):
         if(count>=5):
             self.noticeLabel.setPixmap(self.pmap3)
             self.logLabel2.setText("今日の総計: "+str(count)+"  回　　")
-            self.logLabel3.setText(" これから頑張っでね！！　")
+            self.logLabel3.setText(" これから頑張ってね！！　")
         elif(count<=2):
             self.noticeLabel.setPixmap(self.pmap1)
             self.logLabel2.setText("今日の総計: "+str(count)+"  回　")
@@ -272,7 +272,7 @@ class logSheet(sheet):
         if(count>=50):
             self.noticeLabel.setPixmap(self.pmap3)
             self.logLabel2.setText("今月の総計: "+str(count)+" 回　 ")
-            self.logLabel3.setText(" これから頑張っでね！！")
+            self.logLabel3.setText(" これから頑張ってね！！")
         elif(count<=20):
             self.noticeLabel.setPixmap(self.pmap1)
             self.logLabel2.setText("今月の総計: "+str(count)+" 回　　")
