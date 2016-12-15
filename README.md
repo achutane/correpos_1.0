@@ -8,6 +8,9 @@ PCユーザの皆さん，作業中についつい猫背になっていません
 私たちは猫背を治したいPCユーザの皆さんのためにCORREPOSを製作しました．
 CORREPOSは猫背を検知しそれを警告することで，無理なく手軽に猫背を矯正することができるアプリです．
 
+![CP](posture_correspond.png)
+![SCSHO](screenshot.png)
+
 ***DEMO:***
 ![Demo](demo.gif)
 
