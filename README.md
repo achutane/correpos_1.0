@@ -1,4 +1,4 @@
-<img src="https://github.com/achutane/correpos_1.0/blob/master/correpos_logo.png" width="500px">
+<img src="https://github.com/achutane/correpos_1.0/blob/master/correpos_logo.png" width="510px">
 ====
 CORREPOSは猫背を治したいPCユーザ向けの姿勢矯正アプリケーションです．
 
@@ -7,7 +7,7 @@ PCユーザの皆さん，作業中についつい猫背になっていません
 猫背は肩凝りや腰痛の原因となります．
 私たちは猫背を治したいPCユーザの皆さんのためにCORREPOSを製作しました．
 CORREPOSは猫背を検知しそれを警告することで，無理なく手軽に猫背を矯正することができるアプリです．
-<img src="<img src="https://github.com/achutane/correpos_1.0/blob/master/correpos_logo.png" width="500px">" width="300px">
+<img src="https://github.com/achutane/correpos_1.0/blob/master/posture_correction.png" width="350px">
 
 ## Movie
 https://www.youtube.com/watch?v=rNnLF1YBQXA
@@ -19,6 +19,7 @@ https://www.youtube.com/watch?v=rNnLF1YBQXA
 4. メインウィンドウが現れ猫背検出が始まります．
 
 ※メインウィンドウのボタンは上から，姿勢の再登録，設定，ログ表示のウィンドウを表します．
+
 <img src="https://github.com/achutane/correpos_1.0/blob/master/screenshot.png" width="200px">
 
 ## Requirement
