@@ -18,7 +18,8 @@ CORREPOSは矯正器具と異なり，0円から始めることが可能です�
 https://www.youtube.com/watch?v=rNnLF1YBQXA
 
 ## Usage
-1. 以下のサイトから実行ファイルをダウンロードします．
+1. 以下のサイトからzipファイルをダウンロードし，correpos.exeを実行します．  
+https://drive.google.com/file/d/0B89ilyeDgGk_Y1FqVmNPN3hJT1U/view?usp=sharing  
 2. 「START」をクリックし基準となる正しい姿勢を撮影します．
 3. 撮影が完了したら「次へ」をクリックします．
 4. メインウィンドウが現れ猫背検出が始まります．
