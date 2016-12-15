@@ -7,12 +7,10 @@ PCユーザの皆さん，作業中についつい猫背になっていません
 猫背は肩凝りや腰痛の原因となります．
 私たちは猫背を治したいPCユーザの皆さんのためにCORREPOSを製作しました．
 CORREPOSは猫背を検知しそれを警告することで，無理なく手軽に猫背を矯正することができるアプリです．
+![CP](posture_correction.png)
 
-![CP](posture_correspond.png)
-![SCSHO](screenshot.png)
-
-***DEMO:***
-![Demo](demo.gif)
+## Movie
+https://www.youtube.com/watch?v=rNnLF1YBQXA
 
 ## Usage
 1. 以下のサイトから実行ファイルをダウンロードします．
@@ -21,6 +19,7 @@ CORREPOSは猫背を検知しそれを警告することで，無理なく手軽
 4. メインウィンドウが現れ猫背検出が始まります．
 
 ※メインウィンドウのボタンは上から，姿勢の再登録，設定，ログ表示のウィンドウを表します．
+![SCSHO](screenshot.png)
 
 ## Requirement
 * Python 3.5  
