@@ -7,6 +7,7 @@ PCユーザの皆さん，作業中についつい猫背になっていません
 猫背は肩凝りや腰痛の原因となります．
 私たちは猫背を治したいPCユーザの皆さんのためにCORREPOSを製作しました．
 CORREPOSは猫背を検知しそれを警告することで，無理なく手軽に猫背を矯正することができるアプリです．
+
 <img src="https://github.com/achutane/correpos_1.0/blob/master/posture_correction.png" width="350px">
 
 ## Movie
