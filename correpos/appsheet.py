@@ -49,7 +49,7 @@ class appSheet(sheet):
         self.th = 35       #顔の距離の閾値
         self.multi_y = 0.3   #顔の上下の判定
         
-        self.selectSE = "!.wav"	# デフォルトSE
+        self.selectSE = "small-bell01.wav"	# デフォルトSE
         self.subwindow = None	# 設定ウィンドウ宣言(None)
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET) 
 
