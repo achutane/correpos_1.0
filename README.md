@@ -1,4 +1,4 @@
-# CORREPOS
+![LOGO](correpos_logo.png)
 ====
 CORREPOSは猫背を治したいPCユーザ向けの姿勢矯正アプリケーションです．
 
